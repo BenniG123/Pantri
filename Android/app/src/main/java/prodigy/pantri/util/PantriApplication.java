@@ -16,7 +16,7 @@ import prodigy.pantri.SettingsActivity;
 public class PantriApplication extends Application {
     public String getAuthToken() {
         SharedPreferences prefs = getSharedPreferences("global", MODE_PRIVATE);
-        return prefs.getString("auth", "");
+        return prefs.getString("auth", null);
     }
 
     public void setAuthToken(String authToken) {
