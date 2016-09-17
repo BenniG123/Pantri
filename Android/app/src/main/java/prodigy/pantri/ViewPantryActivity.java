@@ -31,6 +31,21 @@ public class ViewPantryActivity extends PantriBaseActivity {
         ingredientList.add(i1);
         ingredientList.add(i2);
         ingredientList.add(i3);
+        ingredientList.add(i1);
+        ingredientList.add(i2);
+        ingredientList.add(i3);
+        ingredientList.add(i1);
+        ingredientList.add(i2);
+        ingredientList.add(i3);
+        ingredientList.add(i1);
+        ingredientList.add(i2);
+        ingredientList.add(i3);
+        ingredientList.add(i1);
+        ingredientList.add(i2);
+        ingredientList.add(i3);
+        ingredientList.add(i1);
+        ingredientList.add(i2);
+        ingredientList.add(i3);
 
         PantryItemAdapter pantryItemAdapter = new PantryItemAdapter(this, ingredientList);
         ListView listView = (ListView) findViewById(R.id.list_pantry);
