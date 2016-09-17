@@ -35,5 +35,7 @@ public class AddFoodView extends LinearLayout {
         // Set up name part of ViewGroup
         TextView nameView = (TextView) getChildAt(1);
         nameView.setText(title);
+        nameView.setTextSize(18);
+        nameView.setTextColor(Color.BLACK);
     }
 }

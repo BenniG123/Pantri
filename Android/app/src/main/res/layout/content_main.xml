@@ -10,10 +10,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="prodigy.pantri.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main"
+    android:orientation="vertical">
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/pantri_full_logo"/>
+
 </LinearLayout>

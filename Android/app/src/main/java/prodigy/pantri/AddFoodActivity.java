@@ -33,7 +33,7 @@ public class AddFoodActivity extends PantriBaseActivity {
         names.add("Vegetables");
         names.add("Meat");
         names.add("Dairy");
-        names.add("Confectionery");
+        names.add("Other");
 
         AddFoodAdapter addFoodAdapter = new AddFoodAdapter(getApplicationContext(), images, names);
         gridView.setAdapter(addFoodAdapter);
