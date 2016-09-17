@@ -43,7 +43,31 @@ def lookup_upc(upc)
 end
 
 def lookup_recipes(ingredients)
+  flattened_ingredients = flatten_ingredients(ingredients.to_a).map {|i| i.id}.sort()
+  possible_recipes = @recipe_id_ingredients.keys.keep_if do |id|
+    sorted_subset?(flattened_ingredients, @recipe_id_ingredients[id])
+  end
 
+  return Recipe.find_all(possible_recipes)
+end
+
+def sorted_subset?(set, subset)
+  setIndex = 0;
+  subsetIndex = 0;
+
+  while subsetIndex < subset.size
+    return false if setIndex == set.size
+    if set[setIndex] == subset[subsetIndex]
+      setIndex += 1
+      subsetIndex += 1
+    elsif set[setIndex] < subset[subsetIndex]
+      setIndex += 1
+    else
+      return false;
+    end
+  end
+
+  return true
 end
 
 def flatten_ingredients(ingredients)
@@ -62,6 +86,14 @@ def flatten_ingredients(ingredients)
   return flattened_ingredients 
 end
 
+def build_recipe_info
+  @recipes = Recipe.includes(:ingredients).all.to_a()
+  @recipe_id_ingredients = {}
+  @recipes.each do |r|
+    @recipe_id_ingredients[r] = r.ingredients.map {|i| i.id}.sort()
+  end
+end
+
 def build_info
   @ingredients = {}
 
@@ -69,6 +101,7 @@ def build_info
   ingredient_records.each { |i| @ingredients[i.id] = i }
   build_term_vector(@ingredients.values)
   build_biword_vector(@ingredients.values)
+  build_recipe_info()
 end
 
 
