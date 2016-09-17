@@ -8,11 +8,14 @@ from settings import start_urls, base_domain
 from multiprocessing.dummy import Pool as ThreadPool
 
 def main():
-    with open('more_recipes_2.txt', 'r') as infile:
-        with open('big_ole_json.txt', 'w') as outfile:
-            for line in infile:
-                print('dumped '+line.strip())
-                outfile.write(json.dumps(extract_recipe(line.strip()))+'\n\n')
+    pool = ThreadPool(4)
+    results = pool.map(extract_recipe, yield_from_file('recipes.txt'))
+    pool.close()
+    pool.join()
+
+    with open('big_ole_list.json', 'w') as outfile:
+        big_json = { 'recipes': results }
+        outfile.write(json.dumps(big_json, indent=2, separators=(',', ': ')))
 
 
 def extract_recipe(url):
