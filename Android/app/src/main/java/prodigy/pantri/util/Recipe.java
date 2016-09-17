@@ -14,6 +14,7 @@ public class Recipe {
     public int calories;
     public List<Ingredient> ingredients;
     public List<String> steps;
+    public boolean isFavorite;
 
     public Recipe () {
 

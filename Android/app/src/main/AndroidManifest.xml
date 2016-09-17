@@ -36,7 +36,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="prodigy.pantri.MainActivity" />
         </activity>
-        <activity android:name=".PantriBaseActivity"></activity>
+        <activity
+            android:name=".RecipeActivity"
+            android:label="@string/title_activity_recipe"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="prodigy.pantri.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
