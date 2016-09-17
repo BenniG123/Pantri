@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import prodigy.pantri.util.PantriApplication;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -68,7 +70,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+
             return true;
         }
 
@@ -79,20 +82,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_add_food) {
+        Intent intent = PantriApplication.handleNavDrawer(this, item);
 
-        } else if (id == R.id.nav_view_pantry) {
-
-        } else if (id == R.id.nav_cook) {
-
-        } else if (id == R.id.nav_shopping_list) {
-
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
+        if (intent != null) {
             startActivity(intent);
         }
 
