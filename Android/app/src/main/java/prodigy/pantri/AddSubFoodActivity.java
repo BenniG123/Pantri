@@ -21,12 +21,17 @@ public class AddSubFoodActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_sub_food);
+        Bundle extras = getIntent().getExtras();
+        String subGroup = extras.getString("Food Group");
+        ArrayList<String> ingredients = new ArrayList<>();
+
+        if (subGroup != null) {
+            ingredients.add(subGroup);
+        }
 
         final GridView gridView = (GridView) findViewById(R.id.grid_sub_food_group);
 
-        // Collect proper ingredient list
-        ArrayList<String> ingredients = new ArrayList<>();
-
+        // TODO - Collect proper ingredient list
         ingredients.add("Grains");
         ingredients.add("Fruit");
         ingredients.add("Vegetables");

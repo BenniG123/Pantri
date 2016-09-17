@@ -9,8 +9,6 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import prodigy.pantri.util.AddFoodAdapter;
-import prodigy.pantri.util.SubFoodAdapter;
-import prodigy.pantri.util.SubFoodView;
 
 public class AddFoodActivity extends PantriBaseActivity {
     @Override
@@ -21,7 +19,8 @@ public class AddFoodActivity extends PantriBaseActivity {
 
         final GridView gridView = (GridView) findViewById(R.id.grid_food_group);
         ArrayList<Integer> images = new ArrayList<>();
-        ArrayList<String> names = new ArrayList<>();
+        final ArrayList<String> names = new ArrayList<>();
+
         images.add(R.drawable.grains);
         images.add(R.drawable.fruit);
         images.add(R.drawable.vegetables);
@@ -44,6 +43,7 @@ public class AddFoodActivity extends PantriBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Navigator to SubFood Activity, Specifying Food Group
                 Intent intent = new Intent(getApplicationContext(), AddSubFoodActivity.class);
+                intent.putExtra("Food Group", names.get(position));
                 startActivity(intent);
             }
         });
