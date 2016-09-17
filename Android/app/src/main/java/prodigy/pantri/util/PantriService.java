@@ -6,7 +6,6 @@ import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -20,7 +19,7 @@ public interface PantriService {
     Call<List<String>> listPantry(@Header("Authorization") String authorization);
 
     @GET("recipe/")
-    Call<List<String>> listRecipes(@Header("Authorization") String authorization);
+    Call<List<Recipe>> listRecipes(@Header("Authorization") String authorization);
 
     @DELETE("pantry/{id}")
     Call<String> deleteIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);

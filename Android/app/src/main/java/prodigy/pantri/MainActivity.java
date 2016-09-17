@@ -17,12 +17,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.Console;
+
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriService;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private PantriApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        app = (PantriApplication) getApplication();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
         PantriService service = retrofit.create(PantriService.class);
+        // System.out.println(service.listRecipes("Token " + app.getAuthToken()));
 
         /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.getString("pref_name", "");
