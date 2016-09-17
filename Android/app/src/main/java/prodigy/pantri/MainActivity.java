@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import prodigy.pantri.util.PantriApplication;
+import prodigy.pantri.util.PantriService;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -57,6 +59,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
 
         /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.getString("pref_name", "");
