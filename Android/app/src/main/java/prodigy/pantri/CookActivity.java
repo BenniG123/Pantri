@@ -23,6 +23,7 @@ public class CookActivity extends PantriBaseActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_cook);
+        setTitle("Cook");
 
         // Get recipes (AsyncTask?)
         recipes = new Recipe[7];

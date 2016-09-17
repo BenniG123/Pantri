@@ -10,12 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import prodigy.pantri.AddFoodActivity;
 import prodigy.pantri.CookActivity;
 import prodigy.pantri.LoginActivity;
 import prodigy.pantri.MainActivity;
 import prodigy.pantri.R;
 import prodigy.pantri.RecipeActivity;
 import prodigy.pantri.SettingsActivity;
+import prodigy.pantri.ShoppingListActivity;
+import prodigy.pantri.ViewPantryActivity;
 
 /**
  * Created by Quinn on 9/16/2016.
@@ -41,21 +44,23 @@ public class PantriApplication extends Application {
 
         if (id == R.id.nav_home && !(activity instanceof MainActivity)) {
             ret = new Intent(context, MainActivity.class);
-        } else if (id == R.id.nav_add_food) {
-            //ret = new Intent(context, AddFoodActivity.class);
-        } else if (id == R.id.nav_view_pantry) {
-            //ret = new Intent(context, ViewPantryActivity.class);
+        } else if (id == R.id.nav_add_food && !(activity instanceof AddFoodActivity)) {
+            ret = new Intent(context, AddFoodActivity.class);
+        } else if (id == R.id.nav_view_pantry && !(activity instanceof ViewPantryActivity)) {
+            ret = new Intent(context, ViewPantryActivity.class);
         } else if (id == R.id.nav_cook && !(activity instanceof CookActivity)) {
             ret = new Intent(context, CookActivity.class);
-        } else if (id == R.id.nav_shopping_list) {
-            //ret = new Intent(context, ShoppingListActivity.class);
+        } else if (id == R.id.nav_shopping_list && !(activity instanceof ShoppingListActivity)) {
+            ret = new Intent(context, ShoppingListActivity.class);
         } else if (id == R.id.nav_settings && !(activity instanceof SettingsActivity)) {
             ret = new Intent(context, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
             ((PantriApplication) activity.getApplication()).setAuthToken(null);
             ret = new Intent(context, LoginActivity.class);
         }
-        ret.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        if (ret != null) {
+            ret.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
 
         return ret;
     }

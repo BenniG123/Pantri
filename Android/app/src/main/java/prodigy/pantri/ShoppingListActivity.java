@@ -8,5 +8,6 @@ public class ShoppingListActivity extends PantriBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_shopping_list);
+        setTitle("Shopping List");
     }
 }

@@ -50,9 +50,12 @@
             android:name=".CookActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NewFoodActivity" />
-        <activity android:name=".AddFoodActivity" />
-        <activity android:name=".ViewPantryActivity" />
-        <activity android:name=".ShoppingListActivity"></activity>
+        <activity android:name=".AddFoodActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ViewPantryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ShoppingListActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -8,5 +8,6 @@ public class ViewPantryActivity extends PantriBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_view_pantry);
+        setTitle("View Pantry");
     }
 }

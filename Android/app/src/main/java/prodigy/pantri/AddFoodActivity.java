@@ -8,5 +8,6 @@ public class AddFoodActivity extends PantriBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_add_food);
+        setTitle("Add Food");
     }
 }

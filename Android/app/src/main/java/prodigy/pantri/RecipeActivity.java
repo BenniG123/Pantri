@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,18 +49,18 @@ public class RecipeActivity extends AppCompatActivity {
         }
 
         // Create text view
-        String recipeInstructions = "";
+        String recipeInstructions = "<body bgcolor=\"#fafafa\"><p style=\"font-weight:bold;font-size:20\">Ingredients</p>";
         for (String s : r.ingredients) {
-            recipeInstructions += s + "\n";
+            recipeInstructions += s + "<br />";
         }
-        recipeInstructions += "\n";
+        recipeInstructions += "<br /><p style=\"font-weight:bold;font-size:20\">Instructions</p>";
         for (String s : r.steps) {
-            recipeInstructions += s + "\n";
+            recipeInstructions += s + "<br />";
         }
+        recipeInstructions += "</body>";
 
-        // TODO Change this to a WebView so that we can use different styles for each line?
-        TextView t = (TextView) findViewById(R.id.id_txt_recipe);
-        t.setText(recipeInstructions);
+        WebView wv = (WebView) findViewById(R.id.id_txt_recipe);
+        wv.loadData(recipeInstructions, "text/html", null);
 
         // Load the image URL
         ImageView recipeImage = (ImageView) findViewById(R.id.img_recipe_view);
