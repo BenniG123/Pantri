@@ -1,6 +1,7 @@
 package prodigy.pantri;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,6 +38,13 @@ public class AddFoodActivity extends PantriBaseActivity {
 
         AddFoodAdapter addFoodAdapter = new AddFoodAdapter(getApplicationContext(), images, names);
         gridView.setAdapter(addFoodAdapter);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridView.setNumColumns(2);
+        }
+        else {
+            gridView.setNumColumns(3);
+        }
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

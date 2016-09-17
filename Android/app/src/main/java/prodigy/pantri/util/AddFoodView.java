@@ -32,9 +32,9 @@ public class AddFoodView extends LinearLayout {
         Picasso.with(context)
                 .load(imageID)
                 .placeholder(R.drawable.ic_menu_camera)
-                .resize(500, 500)
                 .error(R.drawable.ic_menu_manage)
                 .into(picView);
+        picView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         // Set up name part of ViewGroup
         TextView nameView = (TextView) getChildAt(1);
