@@ -1,5 +1,6 @@
 package prodigy.pantri.util;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -26,23 +27,26 @@ public class PantriApplication extends Application {
         edit.apply();
     }
 
-    public static Intent handleNavDrawer(Context packageContext, MenuItem item) {
+    public static Intent handleNavDrawer(Activity activity, MenuItem item) {
+
         Intent ret = null;
         int id = item.getItemId();
+        Context context = activity.getApplicationContext();
 
-        if (id == R.id.nav_home) {
-            ret = new Intent(packageContext, MainActivity.class);
+        if (id == R.id.nav_home && !(activity instanceof MainActivity)) {
+            ret = new Intent(context, MainActivity.class);
         } else if (id == R.id.nav_add_food) {
-            //ret = new Intent(packageContext, AddFoodActivity.class);
+            //ret = new Intent(context, AddFoodActivity.class);
         } else if (id == R.id.nav_view_pantry) {
-            //ret = new Intent(packageContext, ViewPantryActivity.class);
+            //ret = new Intent(context, ViewPantryActivity.class);
         } else if (id == R.id.nav_cook) {
-            //ret = new Intent(packageContext, CookActivity.class);
+            //ret = new Intent(context, CookActivity.class);
         } else if (id == R.id.nav_shopping_list) {
-            //ret = new Intent(packageContext, ShoppingListActivity.class);
-        } else if (id == R.id.nav_settings) {
-            ret = new Intent(packageContext, SettingsActivity.class);
+            //ret = new Intent(context, ShoppingListActivity.class);
+        } else if (id == R.id.nav_settings && !(activity instanceof SettingsActivity)) {
+            ret = new Intent(context, SettingsActivity.class);
         }
+
         return ret;
     }
 }
