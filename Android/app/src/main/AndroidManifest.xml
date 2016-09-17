@@ -50,12 +50,24 @@
             android:name=".CookActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NewFoodActivity" />
-        <activity android:name=".AddFoodActivity"
+        <activity
+            android:name=".AddFoodActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ViewPantryActivity"
+        <activity
+            android:name=".ViewPantryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ShoppingListActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ShoppingListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddSubFoodActivity"
+            android:label="@string/title_activity_add_sub_food"
+            android:parentActivityName=".AddFoodActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="prodigy.pantri.AddFoodActivity" />
+        </activity>
     </application>
 
 </manifest>
