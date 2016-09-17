@@ -9,7 +9,7 @@ def classify_ingredient(product_name)
   terms.each do |term|
     ingredients = @term_postings[term]
     ingredients.each do |ingredient|
-      ingredient_ranks[ingredient] |= 0
+      ingredient_ranks[ingredient] || ingredient_ranks[ingredient] = 0
       ingredient_ranks[ingredient] += @term_ranks[term]
     end
   end
@@ -17,7 +17,7 @@ def classify_ingredient(product_name)
   biwords.each do |biword|
     ingredients = @biword_postings[biword]
     ingredients.each do |ingredient|
-      ingredient_ranks[ingredient] |= 0
+      ingredient_ranks[ingredient] || ingredient_ranks[ingredient] = 0
       ingredient_ranks[ingredient] += BIWORD_FACTOR * @biword_ranks[biword]
     end
   end
@@ -31,7 +31,7 @@ def classify_ingredient(product_name)
     end
   end
 
-  return top_ingredient
+  return Ingredient.find(top_ingredient)
 end
 
 def normalize_string(str)
@@ -111,15 +111,16 @@ def build_term_vector(ingredients)
 
   term_counts = []
   total_counted = 0
-  split_ingredients = ingredients.map { |i| i.split() }
-  split_ingredients.each do |terms, i|
+  ingredients.each do |ingredient|
+    terms = ingredient.name.split()
     terms.each do |term|
-      @term_id_table[term] = @term_counts.size unless @term_id_table.has_key?(term)
+      @term_id_table[term] = term_counts.size unless @term_id_table.has_key?(term)
       id = @term_id_table[term]
       
-      te rm_counts[id] += 1
-      @term_postings[id] |= []
-      @term_postings[id].push(i.id)
+      term_counts[id] || term_counts[id] = 0
+      term_counts[id] += 1
+      @term_postings[id] || @term_postings[id]= []
+      @term_postings[id].push(ingredient.id)
       total_counted += 1
     end
   end
@@ -136,12 +137,13 @@ def build_biword_vector(ingredients)
   biwords = []
   
   ingredients.each do |ingredient|
-    split_into_biwords(ingredient).each do |biword|
-      @_id_table[biword] = @biword_counts.size unless @biword_id_table.has_key?(biword)
+    split_into_biwords(ingredient.name).each do |biword|
+      @biword_id_table[biword] = biword_counts.size unless @biword_id_table.has_key?(biword)
       id = @biword_id_table[biword]
 
-      @biword_postings[id] |= []
+      @biword_postings[id] || @biword_postings[id]= []
       @biword_postings[id].push(ingredient.id)
+      biword_counts[id] || biword_counts[id] = 0
       biword_counts[id] += 1
       total_counted += 1
     end
@@ -154,7 +156,7 @@ def split_into_biwords(str)
   biwords = []
   terms = str.split()
 
-  [0...terms.size - 1].each do |i|
+  (0...terms.size - 1).each do |i|
     biwords.push("#{terms[i]} #{terms[i + 1]}")
   end
 
