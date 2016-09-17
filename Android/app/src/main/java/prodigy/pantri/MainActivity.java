@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import prodigy.pantri.util.PantriApplication;
+import prodigy.pantri.util.PantriService;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,32 +60,17 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+        // TODO - Enter real URL
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://ITouchMyselfAtNight.com")
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
         /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.getString("pref_name", "");
         prefs.getString("pref_email", "");
         */
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            ((PantriApplication) getApplication()).setAuthToken(null);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

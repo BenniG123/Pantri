@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
+import prodigy.pantri.LoginActivity;
 import prodigy.pantri.MainActivity;
 import prodigy.pantri.R;
 import prodigy.pantri.SettingsActivity;
@@ -46,6 +47,9 @@ public class PantriApplication extends Application {
             //ret = new Intent(context, ShoppingListActivity.class);
         } else if (id == R.id.nav_settings && !(activity instanceof SettingsActivity)) {
             ret = new Intent(context, SettingsActivity.class);
+        } else if (id == R.id.nav_logout) {
+            ((PantriApplication) activity.getApplication()).setAuthToken(null);
+            ret = new Intent(context, LoginActivity.class);
         }
 
         return ret;
