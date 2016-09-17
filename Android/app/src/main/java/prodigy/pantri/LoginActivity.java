@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView.setText(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_email", ""));
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -133,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(PreferenceManager.getDefaultSharedPreferences(this), email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -191,10 +192,12 @@ public class LoginActivity extends AppCompatActivity {
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mEmail;
         private final String mPassword;
+        private SharedPreferences mDefaultSharedPrefs;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(SharedPreferences defaultSharedPrefs, String email, String password) {
             mEmail = email;
             mPassword = password;
+            mDefaultSharedPrefs = defaultSharedPrefs;
         }
 
         @Override
@@ -205,12 +208,20 @@ public class LoginActivity extends AppCompatActivity {
 
             // TODO Try to log in
 
-            // Update auth token
             if (loginSuccess) {
+                // Update auth token
                 SharedPreferences privateData = getSharedPreferences("private_data", MODE_PRIVATE);
                 SharedPreferences.Editor edit = privateData.edit();
                 edit.putString("auth", authToken);
                 edit.apply();
+
+                // Update email and password
+                edit = mDefaultSharedPrefs.edit();
+                edit.putString("pref_name", "John Smith");
+                edit.putString("pref_email", mEmail);
+                edit.putString("pref_password", mPassword);
+                edit.apply();
+
                 return true;
             }
             return false;

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (((PantriApplication) getApplicationContext()).getAuthToken() == null) {
+        if (((PantriApplication) getApplicationContext()).getAuthToken() == null) { // TODO Add check to server to see if token is still valid
             startActivity(new Intent(this, LoginActivity.class));
         }
 
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-
+            ((PantriApplication) getApplication()).setAuthToken(null);
             return true;
         }
 
