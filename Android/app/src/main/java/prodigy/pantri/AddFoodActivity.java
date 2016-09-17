@@ -1,24 +1,18 @@
 package prodigy.pantri;
 
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import prodigy.pantri.util.AddFoodAdapter;
-import prodigy.pantri.util.AddFoodView;
 
 public class AddFoodActivity extends PantriBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.content_add_food);
         app.replaceLayout(this, R.layout.content_add_food);
         setTitle("Add Food");
 
@@ -45,7 +39,8 @@ public class AddFoodActivity extends PantriBaseActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                
+                // Load up proper list of ingredients
+                // Change gridview Adapter for other new foods
             }
         });
 
