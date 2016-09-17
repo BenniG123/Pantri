@@ -28,7 +28,8 @@
     <Spinner
         android:id="@+id/category"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="8dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,7 +39,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <Button
             android:onClick="subQuantity"
             android:layout_width="wrap_content"
@@ -49,6 +50,7 @@
             android:id="@+id/quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="8dp"
             android:text="0" />
 
         <Button
@@ -62,6 +64,7 @@
         android:onClick="submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Item"/>
+        android:text="Add Item"
+        android:padding="16dp"/>
 
 </LinearLayout>
