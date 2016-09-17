@@ -66,6 +66,15 @@ public class AddSubFoodActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_ingredient);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getApplicationContext(), NewFoodActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
     }
 
 }

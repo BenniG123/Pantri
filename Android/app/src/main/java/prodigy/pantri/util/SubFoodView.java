@@ -27,7 +27,7 @@ public class SubFoodView extends LinearLayout {
         // Set up name part of ViewGroup
         TextView nameView = (TextView) getChildAt(0);
         nameView.setText(ingredient);
-        nameView.setTextSize(18);
+        nameView.setTextSize(24);
         nameView.setTextColor(Color.BLACK);
     }
 }

@@ -162,6 +162,15 @@
             
     </string-array>
 
+    <string-array name="groups_array">
+                <item>Fruit</item>
+                <item>Vegetable</item>
+                <item>Grains</item>
+                <item>Meat</item>
+                <item>Dairy</item>
+                <item>Other</item>
+            </string-array>
+
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_sub_food">AddSubFoodActivity</string>
 </resources>
