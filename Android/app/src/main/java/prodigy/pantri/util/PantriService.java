@@ -17,10 +17,10 @@ import retrofit2.http.Query;
 public interface PantriService {
 
     @GET("pantry")
-    Call<List<Ingredient>> listPantry(@Header("Authorization") String authorization);
+    Call<List<String>> listPantry(@Header("Authorization") String authorization);
 
-    @GET("recipe")
-    Call<List<Recipe>> listRecipes(@Header("Authorization") String authorization);
+    @GET("recipe/")
+    Call<List<String>> listRecipes(@Header("Authorization") String authorization);
 
     @DELETE("pantry/{id}")
     Call<String> deleteIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
@@ -29,9 +29,9 @@ public interface PantriService {
     Call<String> addIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
 
     @GET("ingredient/upc")
-    Call<Ingredient> getIngredientUPC(@Header("Authorization") String authorization, @Query("upc") String upc);
+    Call<String> getIngredientUPC(@Header("Authorization") String authorization, @Query("upc") String upc);
 
     @GET("ingredient/name")
-    Call<Ingredient> getIngredientName(@Header("Authorization") String authorization, @Query("name") String name);
+    Call<String> getIngredientName(@Header("Authorization") String authorization, @Query("name") String name);
 
 }
