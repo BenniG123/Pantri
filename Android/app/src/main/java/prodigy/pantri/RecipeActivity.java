@@ -1,6 +1,7 @@
 package prodigy.pantri;
 
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -8,9 +9,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -33,10 +37,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        r = new Recipe();
-        r.name = "Mom's Spaghetti";
-        r.image = "http://i1.kym-cdn.com/photos/images/original/000/359/570/486.png";
-        r.steps = new ArrayList<String>();
+        r = (Recipe) getIntent().getSerializableExtra("recipe");
 
         final ColorStateList darker_gray = fab.getBackgroundTintList();
         final ColorStateList yellow = ColorStateList.valueOf(Color.rgb(255, 180, 0));
@@ -48,19 +49,26 @@ public class RecipeActivity extends AppCompatActivity {
 
         // Create text view
         String recipeInstructions = "";
+        for (String s : r.ingredients) {
+            recipeInstructions += s + "\n";
+        }
+        recipeInstructions += "\n";
         for (String s : r.steps) {
             recipeInstructions += s + "\n";
         }
 
+        // TODO Change this to a WebView so that we can use different styles for each line?
         TextView t = (TextView) findViewById(R.id.id_txt_recipe);
         t.setText(recipeInstructions);
 
         // Load the image URL
         ImageView recipeImage = (ImageView) findViewById(R.id.img_recipe_view);
+
+        // TODO Figure out how to make the image fill area without changing aspect ratio
         Picasso.with(getApplicationContext())
-                .load(r.image.toString())
-                .placeholder(R.drawable.main_grilled_chicken)
+                .load(r.image)
                 .error(R.drawable.ic_info_black_24dp)
+                .centerCrop()
                 .fit()
                 .into(recipeImage);
 

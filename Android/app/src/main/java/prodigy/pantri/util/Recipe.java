@@ -10,10 +10,10 @@ import java.util.List;
 public class Recipe implements Serializable {
     public int id;
     public String name;
-    public String url;
+    public String thumbnail;
     public String image;
-    public int calories;
-    public List<Ingredient> ingredients;
+    public String cookTime;
+    public List<String> ingredients;
     public List<String> steps;
     public boolean isFavorite;
 

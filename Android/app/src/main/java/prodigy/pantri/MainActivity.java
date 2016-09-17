@@ -33,7 +33,6 @@ public class MainActivity extends PantriBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         app.replaceLayout(this, R.layout.content_main);
     }
 }

@@ -11,7 +11,7 @@
     <application
         android:name=".util.PantriApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_pantrilogo"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
@@ -40,13 +40,19 @@
         <activity
             android:name=".RecipeActivity"
             android:label="@string/title_activity_recipe"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".CookActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="prodigy.pantri.MainActivity" />
+                android:value="prodigy.pantri.CookActivity" />
         </activity>
-        <activity android:name=".CookActivity"></activity>
+        <activity
+            android:name=".CookActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".NewFoodActivity" />
+        <activity android:name=".AddFoodActivity" />
+        <activity android:name=".ViewPantryActivity" />
+        <activity android:name=".ShoppingListActivity"></activity>
     </application>
 
 </manifest>

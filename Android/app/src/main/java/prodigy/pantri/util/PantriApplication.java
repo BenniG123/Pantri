@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import prodigy.pantri.CookActivity;
 import prodigy.pantri.LoginActivity;
 import prodigy.pantri.MainActivity;
 import prodigy.pantri.R;
@@ -44,8 +45,8 @@ public class PantriApplication extends Application {
             //ret = new Intent(context, AddFoodActivity.class);
         } else if (id == R.id.nav_view_pantry) {
             //ret = new Intent(context, ViewPantryActivity.class);
-        } else if (id == R.id.nav_cook && !(activity instanceof RecipeActivity)) {
-            ret = new Intent(context, RecipeActivity.class);
+        } else if (id == R.id.nav_cook && !(activity instanceof CookActivity)) {
+            ret = new Intent(context, CookActivity.class);
         } else if (id == R.id.nav_shopping_list) {
             //ret = new Intent(context, ShoppingListActivity.class);
         } else if (id == R.id.nav_settings && !(activity instanceof SettingsActivity)) {
@@ -54,6 +55,7 @@ public class PantriApplication extends Application {
             ((PantriApplication) activity.getApplication()).setAuthToken(null);
             ret = new Intent(context, LoginActivity.class);
         }
+        ret.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
         return ret;
     }

@@ -25,7 +25,7 @@ public class RecipeListAdapter extends BaseAdapter {
     }
 
     public Object getItem(int position) {
-        return mRecipes[position];
+        return null;
     }
 
     public long getItemId(int position) {
