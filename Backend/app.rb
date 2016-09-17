@@ -14,6 +14,10 @@ before do
   end
 end
 
+get '/' do
+  return "Welcome to Pantri!"
+end
+
 post '/session' do
   return 400 unless params[:email]
   user = User.find_by_email(params[:email]) || User.create(params)
@@ -24,7 +28,8 @@ end
 
 delete '/session' do
   return 400 unless @session
-  session.destroy()
+  @session.destroy()
+  return json status: "Success"
 end
 
 get '/pantry' do
@@ -34,14 +39,14 @@ get '/pantry' do
       id: i.id,
       name: i.name
     }
-
-    return json ingredients: formatted_ingredients
   end
+
+  return json ingredients: formatted_ingredients
 end
 
 delete '/pantry/:id' do
   return 401 unless @user
-  ingredient = @user.ingredients.find(params[:id]);
+  ingredient = @user.ingredients.find_by_id(params[:id]);
   return 404 unless ingredient
   ingredient.destroy
 
@@ -50,7 +55,7 @@ end
 
 put '/pantry/:id' do
   return 401 unless @user
-  ingredient = Ingredient.find(:id)
+  ingredient = Ingredient.find_by_id(:id)
   return 404 unless ingredient
   @user.ingredients.push(ingredient)
   @user.save
@@ -69,8 +74,8 @@ get '/recipe/' do
       thumbnail: r.thumbnail,
       image: r.image,
       cookTime: r.cook_time,
-      ingredients: r.ingredients.split('🏩'),
-      steps: r.ingredients.split('🏩')
+      ingredients: r.ingredients.split('\0'),
+      steps: r.ingredients.split('\0')
     }
   end
 

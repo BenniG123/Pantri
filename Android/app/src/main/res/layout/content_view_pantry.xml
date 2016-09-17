@@ -15,5 +15,5 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/list_pantry"></ListView>
+        android:id="@+id/list_pantry" />
 </LinearLayout>

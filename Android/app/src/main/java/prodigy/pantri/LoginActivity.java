@@ -33,9 +33,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.ResponseBody;
+import prodigy.pantri.util.PantriService;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -207,6 +214,20 @@ public class LoginActivity extends AppCompatActivity {
             boolean loginSuccess = true; // TODO Make false
 
             // TODO Try to log in
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(getString(R.string.rest_url))
+                    .build();
+
+            PantriService service = retrofit.create(PantriService.class);
+
+            try {
+                Response<ResponseBody> authResponse = service.getSession(mEmail).execute();
+                String token = authResponse.body().string();
+                System.out.println(token);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
             if (loginSuccess) {
                 // Update auth token
