@@ -2,6 +2,7 @@ package prodigy.pantri.util;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,16 +25,22 @@ public class AddFoodView extends LinearLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.add_food_adapter, this, true);
 
+        setOrientation(VERTICAL);
+
         // Set up picView part of ViewGroup
         ImageView picView = (ImageView) getChildAt(0);
         Picasso.with(context)
                 .load(imageID)
                 .placeholder(R.drawable.ic_menu_camera)
+                .resize(500, 500)
                 .error(R.drawable.ic_menu_manage)
                 .into(picView);
 
         // Set up name part of ViewGroup
         TextView nameView = (TextView) getChildAt(1);
+        nameView.setTextSize(18);
+        nameView.setTextColor(Color.BLACK);
+        nameView.setTypeface(null, Typeface.BOLD);
         nameView.setText(title);
     }
 }
