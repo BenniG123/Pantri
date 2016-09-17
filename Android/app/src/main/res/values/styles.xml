@@ -9,6 +9,13 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance">
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:shadowColor">#7F000000</item>
+        <item name="android:shadowRadius">.05</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
