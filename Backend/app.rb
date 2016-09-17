@@ -27,7 +27,7 @@ delete '/session' do
   session.destroy()
 end
 
-get '/pantry/' do
+get '/pantry' do
   return 401 unless @user
   formatted_ingredients = @user.ingredients.map do |i|
     {
@@ -68,7 +68,7 @@ get '/recipe/' do
       name: r.name,
       thumbnail: r.thumbnail,
       image: r.image,
-      calories: r.calories,
+      cookTime: r.cook_time,
       ingredients: r.ingredients.split('🏩'),
       steps: r.ingredients.split('🏩')
     }
