@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import prodigy.pantri.LoginActivity;
 import prodigy.pantri.MainActivity;
@@ -54,5 +56,14 @@ public class PantriApplication extends Application {
         }
 
         return ret;
+    }
+
+    public static void replaceLayout(Activity a, int resource) {
+        View C = a.findViewById(R.id.activity_content);
+        ViewGroup parent = (ViewGroup) C.getParent();
+        int index = parent.indexOfChild(C);
+        parent.removeView(C);
+        C = a.getLayoutInflater().inflate(resource, parent, false);
+        parent.addView(C, index);
     }
 }
