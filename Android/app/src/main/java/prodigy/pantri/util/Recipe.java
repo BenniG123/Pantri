@@ -1,12 +1,13 @@
 package prodigy.pantri.util;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 
 /**
  * Created by Ben on 9/17/2016.
  */
-public class Recipe {
+public class Recipe implements Serializable {
     public int id;
     public String name;
     public URL url;
