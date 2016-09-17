@@ -5,4 +5,6 @@ development:
   timeout: 5000
 
 production:
-  url: <%= ENV['DATABASE_URL'] %>
+  adapter: postgresql
+  pool: 4
+  url: postgres://lvbrvhzmxgvcrl:CZkY8Q5VqnwzDQlIc8DHqrDsm0@ec2-54-225-100-236.compute-1.amazonaws.com:5432/d5q7hk5i6567di

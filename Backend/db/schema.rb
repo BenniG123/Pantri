@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160917085614) do
+ActiveRecord::Schema.define(version: 20160917211100) do
 
   create_table "ingredients", force: :cascade do |t|
     t.string  "name"
@@ -27,6 +27,14 @@ ActiveRecord::Schema.define(version: 20160917085614) do
 
   add_index "ingredients_recipes", ["ingredient_id"], name: "index_ingredients_recipes_on_ingredient_id"
   add_index "ingredients_recipes", ["recipe_id"], name: "index_ingredients_recipes_on_recipe_id"
+
+  create_table "ingredients_users", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "ingredient_id"
+  end
+
+  add_index "ingredients_users", ["ingredient_id"], name: "index_ingredients_users_on_ingredient_id"
+  add_index "ingredients_users", ["user_id"], name: "index_ingredients_users_on_user_id"
 
   create_table "recipes", force: :cascade do |t|
     t.string "name"
@@ -50,13 +58,5 @@ ActiveRecord::Schema.define(version: 20160917085614) do
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
-
-  create_table "users_ingredients", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "ingredient_id"
-  end
-
-  add_index "users_ingredients", ["ingredient_id"], name: "index_users_ingredients_on_ingredient_id"
-  add_index "users_ingredients", ["user_id"], name: "index_users_ingredients_on_user_id"
 
 end
