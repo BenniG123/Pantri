@@ -34,11 +34,6 @@ public class MainActivity extends PantriBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View C = findViewById(R.id.activity_content);
-        ViewGroup parent = (ViewGroup) C.getParent();
-        int index = parent.indexOfChild(C);
-        parent.removeView(C);
-        C = getLayoutInflater().inflate(R.layout.content_main, parent, false);
-        parent.addView(C, index);
+        app.replaceLayout(this, R.layout.content_main);
     }
 }
