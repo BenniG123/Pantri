@@ -68,6 +68,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="prodigy.pantri.AddFoodActivity" />
         </activity>
+        <activity android:name=".FoodSearchActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

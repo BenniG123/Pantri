@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import prodigy.pantri.AddFoodActivity;
 import prodigy.pantri.CookActivity;
+import prodigy.pantri.FoodSearchActivity;
 import prodigy.pantri.LoginActivity;
 import prodigy.pantri.MainActivity;
 import prodigy.pantri.R;
@@ -44,8 +45,8 @@ public class PantriApplication extends Application {
 
         if (id == R.id.nav_home && !(activity instanceof MainActivity)) {
             ret = new Intent(context, MainActivity.class);
-        } else if (id == R.id.nav_add_food && !(activity instanceof AddFoodActivity)) {
-            ret = new Intent(context, AddFoodActivity.class);
+        } else if (id == R.id.nav_add_food && !(activity instanceof FoodSearchActivity)) {
+            ret = new Intent(context, FoodSearchActivity.class);
         } else if (id == R.id.nav_view_pantry && !(activity instanceof ViewPantryActivity)) {
             ret = new Intent(context, ViewPantryActivity.class);
         } else if (id == R.id.nav_cook && !(activity instanceof CookActivity)) {
