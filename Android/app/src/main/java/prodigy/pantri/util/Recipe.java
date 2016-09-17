@@ -9,8 +9,8 @@ import java.util.List;
 public class Recipe {
     public int id;
     public String name;
-    public URL url;
-    public URL image;
+    public String url;
+    public String image;
     public int calories;
     public List<Ingredient> ingredients;
     public List<String> steps;
