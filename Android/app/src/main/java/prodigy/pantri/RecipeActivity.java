@@ -9,7 +9,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import prodigy.pantri.util.Recipe;
 
@@ -46,9 +49,20 @@ public class RecipeActivity extends AppCompatActivity {
 
          */
 
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Load the image URL
+                ImageView recipeImage = (ImageView) findViewById(R.id.img_recipe_view);
+                // Picasso.with(this).load(R.drawable.main_grilled_chicken).into(recipeImage);
+                Picasso.with(getApplicationContext())
+                        .load("http://i.imgur.com/bwxU6fN.jpg")
+                        .placeholder(R.drawable.ic_menu_camera)
+                        .error(R.drawable.ic_menu_manage)
+                        .into(recipeImage);
+
                 if (r.isFavorite) {
                     r.isFavorite = false;
                     Snackbar.make(view, "Recipe Un-Favorited", Snackbar.LENGTH_LONG)
@@ -64,5 +78,6 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 }
