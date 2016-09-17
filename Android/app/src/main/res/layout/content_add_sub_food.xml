@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="prodigy.pantri.AddSubFoodActivity"
-    tools:showIn="@layout/activity_add_sub_food">
+    tools:showIn="@layout/activity_add_sub_food" >
 
     <GridView
         android:id="@+id/grid_sub_food_group"
@@ -18,7 +18,6 @@
         android:layout_height="match_parent"
         android:numColumns="2"
         android:horizontalSpacing="16dp"
-        android:verticalSpacing="16dp"
-        />
+        android:verticalSpacing="16dp" />
 
 </RelativeLayout>

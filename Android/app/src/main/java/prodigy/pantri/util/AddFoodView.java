@@ -42,5 +42,7 @@ public class AddFoodView extends LinearLayout {
         nameView.setTextColor(Color.BLACK);
         nameView.setTypeface(null, Typeface.BOLD);
         nameView.setText(title);
+        nameView.setTextSize(18);
+        nameView.setTextColor(Color.BLACK);
     }
 }
