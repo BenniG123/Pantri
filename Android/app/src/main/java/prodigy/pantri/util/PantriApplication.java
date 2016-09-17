@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import prodigy.pantri.MainActivity;
@@ -16,12 +17,12 @@ import prodigy.pantri.SettingsActivity;
  */
 public class PantriApplication extends Application {
     public String getAuthToken() {
-        SharedPreferences prefs = getSharedPreferences("global", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("private_data", MODE_PRIVATE);
         return prefs.getString("auth", null);
     }
 
     public void setAuthToken(String authToken) {
-        SharedPreferences prefs = getSharedPreferences("global", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("private_data", MODE_PRIVATE);
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString("auth", authToken);
         edit.apply();
