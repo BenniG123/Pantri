@@ -14,6 +14,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import prodigy.pantri.util.Recipe;
 
 public class RecipeActivity extends AppCompatActivity {
@@ -28,7 +32,11 @@ public class RecipeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         r = new Recipe();
+        r.name = "Mom's Spaghetti";
+        r.image = "http://i1.kym-cdn.com/photos/images/original/000/359/570/486.png";
+        r.steps = new ArrayList<String>();
 
         final ColorStateList darker_gray = fab.getBackgroundTintList();
         final ColorStateList yellow = ColorStateList.valueOf(Color.rgb(255, 180, 0));
@@ -40,28 +48,27 @@ public class RecipeActivity extends AppCompatActivity {
 
         // Create text view
         String recipeInstructions = "";
-        /* for (String s : r.steps) {
+        for (String s : r.steps) {
             recipeInstructions += s + "\n";
         }
 
         TextView t = (TextView) findViewById(R.id.id_txt_recipe);
         t.setText(recipeInstructions);
 
-         */
+        // Load the image URL
+        ImageView recipeImage = (ImageView) findViewById(R.id.img_recipe_view);
+        Picasso.with(getApplicationContext())
+                .load(r.image.toString())
+                .placeholder(R.drawable.main_grilled_chicken)
+                .error(R.drawable.ic_info_black_24dp)
+                .fit()
+                .into(recipeImage);
 
+        setTitle(r.name);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // Load the image URL
-                ImageView recipeImage = (ImageView) findViewById(R.id.img_recipe_view);
-                // Picasso.with(this).load(R.drawable.main_grilled_chicken).into(recipeImage);
-                Picasso.with(getApplicationContext())
-                        .load("http://i.imgur.com/bwxU6fN.jpg")
-                        .placeholder(R.drawable.ic_menu_camera)
-                        .error(R.drawable.ic_menu_manage)
-                        .into(recipeImage);
 
                 if (r.isFavorite) {
                     r.isFavorite = false;
