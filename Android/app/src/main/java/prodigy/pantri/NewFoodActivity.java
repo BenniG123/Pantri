@@ -1,5 +1,6 @@
 package prodigy.pantri;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,13 +17,11 @@ public class NewFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_food);
 
-        Spinner spinner = (Spinner) findViewById(R.id.category);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.groups_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        Intent i = getIntent();
+        if (i.getStringExtra("name") != null) {
+            TextView itemName = (TextView) findViewById(R.id.item_name);
+            itemName.setText(i.getStringExtra("name"));
+        }
     }
 
     public void subQuantity(View v) {
@@ -40,6 +39,9 @@ public class NewFoodActivity extends AppCompatActivity {
 
     public void submit(View v) {
         // TODO - REST Call to add ingredient to server
+
+        // Only let them add something that is in the master ingredient array
+
         finish();
     }
 }
