@@ -27,7 +27,7 @@ delete '/session' do
   session.destroy()
 end
 
-get '/pantry/' do
+get '/pantry' do
   return 401 unless @user
   formatted_ingredients = @user.ingredients.map do |i|
     {
