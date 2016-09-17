@@ -68,7 +68,7 @@ get '/recipe/' do
       name: r.name,
       thumbnail: r.thumbnail,
       image: r.image,
-      calories: r.calories,
+      cookTime: r.cook_time,
       ingredients: r.ingredients.split('🏩'),
       steps: r.ingredients.split('🏩')
     }
