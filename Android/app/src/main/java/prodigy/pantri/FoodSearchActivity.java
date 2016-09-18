@@ -16,8 +16,11 @@ import java.util.Collections;
 
 import prodigy.pantri.util.Ingredient;
 import prodigy.pantri.util.LevenshteinComparator;
+import prodigy.pantri.util.PantriCallback;
+import prodigy.pantri.util.ServerCommsTask;
+import prodigy.pantri.util.TaskType;
 
-public class FoodSearchActivity extends PantriBaseActivity implements SearchView.OnQueryTextListener, ListView.OnItemClickListener {
+public class FoodSearchActivity extends PantriBaseActivity implements SearchView.OnQueryTextListener, ListView.OnItemClickListener, PantriCallback<Ingredient> {
     private SearchView searchView;
     private ListView listView;
     private ArrayList<String> ingredientNames;
@@ -48,10 +51,8 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
     public boolean onQueryTextSubmit(String s) {
         if (s.matches("^[0-9]+$")) {
             // If match found for UPC, add it and let the user know
-
-            // If no match found, redirect them to New Food Activity
-
-            return true;
+            ServerCommsTask task = new ServerCommsTask<>(TaskType.GET_INGREDIENT_UPC, this, app, s);
+            task.execute();
         }
         return false;
     }
@@ -75,7 +76,7 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
     private ArrayList<String> getMasterIngredientMatches(String toMatch) {
         ArrayList<String> ret = new ArrayList<>();
         for (int i = 0; i < masterIngredientList.length; i++) {
-            if (masterIngredientList[i].contains(toMatch)) {
+            if (masterIngredientList[i].toLowerCase().contains(toMatch.toLowerCase())) {
                 ret.add(masterIngredientList[i]);
             }
         }
@@ -84,5 +85,17 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
         Collections.sort(ret, new LevenshteinComparator(toMatch));
 
         return ret;
+    }
+
+    @Override
+    public void run(Ingredient arg) {
+        if (arg != null) { // Match
+            ServerCommsTask task = new ServerCommsTask<>(TaskType.ADD_INGREDIENT, null, app, arg.id);
+            task.execute();
+        }
+        else {
+            Intent i = new Intent(this, NewFoodActivity.class);
+            startActivity(i);
+        }
     }
 }
