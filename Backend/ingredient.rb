@@ -174,18 +174,25 @@ def lookup_recipes(ingredients)
 end
 
 def sorted_subset?(set, subset)
+  free_ingredients = 1
   setIndex = 0;
   subsetIndex = 0;
 
   while subsetIndex < subset.size
-    return false if setIndex == set.size
+    if setIndex == set.size
+      return subset.size - subsetIndex < free_ingredients 
+    end 
+
     if set[setIndex] == subset[subsetIndex]
       setIndex += 1
       subsetIndex += 1
     elsif set[setIndex] < subset[subsetIndex]
       setIndex += 1
+    elsif free_ingredients == 0
+      return false
     else
-      return false;
+      free_ingredients -= 1
+      subsetIndex += 1
     end
   end
 
