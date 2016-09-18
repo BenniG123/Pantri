@@ -37,14 +37,6 @@ public class PantryItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PantryItemView pantryView = null;
-
-        if (convertView == null) {
-            pantryView = new PantryItemView(context, ingredients.get(position));
-        } else {
-            pantryView = (PantryItemView) convertView;
-        }
-
-        return pantryView;
+        return new PantryItemView(context, ingredients.get(position));
     }
 }

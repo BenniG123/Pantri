@@ -103,7 +103,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
 
                 for (int i = 0; i < arr.length(); i++) {
                     Recipe tmp = new Recipe();
-                    JSONObject recipe = (JSONObject) arr.get(0);
+                    JSONObject recipe = (JSONObject) arr.get(i);
 
                     // public List<String> ingredients;
                     // public List<String> steps;
@@ -201,16 +201,26 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         List<Ingredient> pantryList = null;
         try {
             Response<ResponseBody> response = authResponse.execute();
-            String str = response.body().string();
-            JSONObject obj = new JSONObject(str);
-            JSONArray arr = obj.getJSONArray("ingredients");
-            pantryList = new ArrayList<Ingredient>();
-            for (int i = 0; i < arr.length(); i++) {
-                Ingredient tmp = new Ingredient();
-                JSONObject ingred = (JSONObject) arr.get(0);
-                tmp.id = ingred.getInt("id");
-                tmp.name = ingred.getString("name");
-                pantryList.add(tmp);
+
+            if (response.isSuccessful()) {
+                String str = response.body().string();
+
+                JSONObject obj = new JSONObject(str);
+                JSONArray arr = obj.getJSONArray("ingredients");
+                pantryList = new ArrayList<Ingredient>();
+
+                for (int i = 0; i < arr.length(); i++) {
+                    Ingredient tmp = new Ingredient();
+                    JSONObject ingred = (JSONObject) arr.get(i);
+
+                    tmp.id = ingred.getInt("id");
+                    tmp.name = ingred.getString("name");
+                    pantryList.add(tmp);
+                }
+            }
+            else {
+                int responseCode = response.raw().code();
+                System.out.println("Error - Code " + responseCode);
             }
         } catch (IOException e) {
             e.printStackTrace();

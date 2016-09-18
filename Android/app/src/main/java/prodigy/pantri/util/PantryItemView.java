@@ -1,6 +1,7 @@
 package prodigy.pantri.util;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class PantryItemView extends LinearLayout {
         TextView nameView = (TextView) findViewById(R.id.ingredient_name);
         nameView.setTextSize(18);
         nameView.setText(ingredient.name);
+        nameView.setTextColor(Color.BLACK);
 
     }
 }
