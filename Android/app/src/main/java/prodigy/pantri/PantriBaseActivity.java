@@ -81,8 +81,6 @@ public class PantriBaseActivity extends AppCompatActivity
             ret = new Intent(context, ViewPantryActivity.class);
         } else if (id == R.id.nav_recipes && !(this instanceof ViewRecipesActivity)) {
             ret = new Intent(context, ViewRecipesActivity.class);
-        } else if (id == R.id.nav_shopping_list && !(this instanceof ShoppingListActivity)) {
-            ret = new Intent(context, ShoppingListActivity.class);
         } else if (id == R.id.nav_settings) {
             ret = new Intent(context, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
