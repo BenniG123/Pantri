@@ -33,6 +33,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -210,7 +213,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             // Attempt authentication against a network service.
-            String authToken = "LOGGED_IN";
             boolean loginSuccess = true; // TODO Make false
 
             // TODO Try to log in
@@ -219,23 +221,30 @@ public class LoginActivity extends AppCompatActivity {
                     .build();
 
             PantriService service = retrofit.create(PantriService.class);
+            String token = "";
 
             try {
                 Response<ResponseBody> authResponse = service.getSession(mEmail).execute();
-                String token = authResponse.body().string();
-                System.out.println(token);
+                JSONObject jsonObject = new JSONObject(authResponse.body().string());
+                token = jsonObject.getString("token");
+
             } catch (IOException e) {
+                loginSuccess = false;
+                token = null;
+                e.printStackTrace();
+            } catch (JSONException e) {
+                loginSuccess = false;
+                token = null;
                 e.printStackTrace();
             }
 
+            // Update auth token
+            SharedPreferences privateData = getSharedPreferences("private_data", MODE_PRIVATE);
+            SharedPreferences.Editor edit = privateData.edit();
+            edit.putString("auth", token);
+            edit.apply();
 
             if (loginSuccess) {
-                // Update auth token
-                SharedPreferences privateData = getSharedPreferences("private_data", MODE_PRIVATE);
-                SharedPreferences.Editor edit = privateData.edit();
-                edit.putString("auth", authToken);
-                edit.apply();
-
                 // Update email and password
                 edit = mDefaultSharedPrefs.edit();
                 edit.putString("pref_name", "John Smith");
@@ -245,6 +254,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 return true;
             }
+
             return false;
         }
 
