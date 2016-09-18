@@ -39,7 +39,7 @@ get '/pantry' do
   formatted_ingredients = @user.amounts.map do |i|
     {
       id: i.ingredient.id,
-      name: i.ingredient.name,
+      name: i.ingredient.name.titleize(),
       quantity: i.quantity
     }
   end
@@ -75,7 +75,7 @@ end
 put '/pantry/:id' do
   return 401 unless @user
   ingredient = Ingredient.find_by_id(params[:id])
-  quantity = params[:quantity] || 1
+  quantity = params[:quantity] || [1, quantity].max
   return 404 unless ingredient
 
   if @user.ingredients.exists?(ingredient.id)

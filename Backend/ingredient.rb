@@ -207,20 +207,16 @@ def flatten_ingredients(ingredients)
   visited_ingredients = Set.new()
 
   to_visit.each do |i|
+    next unless i && i[:parent] && $ingredients[i[:parent]]
+    
     parent = $ingredients[i[:parent]]
-    unless visited_ingredients.include?(parent[:id])
+    next unless parent
+    unless visited_ingredients.include?(i[:parent])
       flattened_ingredients.push(parent)
-      visited_ingredients.add(parent[:id])
-      to_visit.push(parent)
+      visited_ingredients.add(i[:parent])
+      to_visit.push($ingredients[parent])
     end
 
-    i[:children].each do |child|
-      unless visited_ingredients.include?(child[:id])
-        flattened_ingredients.push(child)
-        visited_ingredients.add(child[:id])
-        to_visit.push(child)
-      end
-    end
   end
 
   return flattened_ingredients 
@@ -241,9 +237,9 @@ def build_info
   ingredient_records = Ingredient.includes(:parent).all()
   ingredient_records.each do |i| 
     $ingredients[i.id] = {id: i.id, name: i.name}
-    $ingredients[i.id][:parent] = i.parent.id if i.parent
-    $ingredients[i.parent.id][:children] ||  $ingredients[i.parent.id][:children] = []
-    $ingredients[i.parent.id][:children].push($ingredients[i.id])
+    if i.parent
+      $ingredients[i.id][:parent] = i.parent.id if i.parent
+    end
     if i.name.include?('water') || i.name == 'salt' || i.name == 'pepper' || i.name == 'black pepepr'
       $common_ingredients.push({id: i.id, name: i.name})
     end

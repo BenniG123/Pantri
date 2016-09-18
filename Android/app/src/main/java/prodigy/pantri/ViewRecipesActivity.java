@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import prodigy.pantri.util.PantriApplication;
@@ -33,6 +35,7 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
     private RecipeListAdapter listAdapter;
     private ServerCommsTask mTask;
     private GridView mGrid;
+    private TextView mPlaceholder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
     public void refresh() {
         mTask = new ServerCommsTask<>(TaskType.LIST_RECIPES, this, (PantriApplication) getApplication());
         mGrid = (GridView) findViewById(R.id.recipe_grid);
+        mPlaceholder = (TextView) findViewById(R.id.placeholder);
         mTask.execute();
     }
 
@@ -57,11 +61,19 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
     }
 
     @Override
-    public void run(List<Recipe> recipes) {
+    public void run(final List<Recipe> recipes) {
         mRecipeList = recipes;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (mRecipeList.size() == 0) {
+                    mGrid.setVisibility(View.GONE);
+                    mPlaceholder.setVisibility(View.VISIBLE);
+                } else {
+                    mGrid.setVisibility(View.VISIBLE);
+                    mPlaceholder.setVisibility(View.GONE);
+                }
+
                 mGrid.setAdapter(new BaseAdapter() {
                     @Override
                     public int getCount() {
@@ -97,7 +109,6 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
                             .centerCrop()
                             .fit()
                             .into(holder.image);
-
 
                         convertView.setOnClickListener(new View.OnClickListener() {
                             @Override
