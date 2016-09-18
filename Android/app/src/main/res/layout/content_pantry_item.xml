@@ -15,15 +15,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/ingredient_name"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_minus"
-                android:text="-"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentTop="false"
-                android:layout_toStartOf="@+id/txt_quantity" />
+                android:layout_toStartOf="@+id/txt_quantity"
+                android:textSize="30sp"
+                android:background="@drawable/round_button"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="-"
+                android:layout_marginTop="2sp"
+                android:id="@+id/btn_minus"/>
 
             <TextView
                 android:id="@+id/txt_quantity"
@@ -31,13 +36,20 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="0"
-                android:layout_toLeftOf="@+id/btn_plus"/>
+                android:layout_toLeftOf="@+id/btn_plus"
+                android:textSize="30sp"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="10sp"
+                android:layout_marginRight="10sp" />
 
             <Button
                 android:id="@+id/btn_plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:text="+"
-                android:layout_alignParentRight="true"/>
+                android:layout_marginTop="2sp"
+                android:background="@drawable/round_button"
+                android:layout_alignParentRight="true"
+                android:textSize="20sp" />
     </RelativeLayout>
 </merge>

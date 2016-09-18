@@ -174,18 +174,25 @@ def lookup_recipes(ingredients)
 end
 
 def sorted_subset?(set, subset)
+  free_ingredients = 1
   setIndex = 0;
   subsetIndex = 0;
 
   while subsetIndex < subset.size
-    return false if setIndex == set.size
+    if setIndex == set.size
+      return subset.size - subsetIndex < free_ingredients 
+    end 
+
     if set[setIndex] == subset[subsetIndex]
       setIndex += 1
       subsetIndex += 1
     elsif set[setIndex] < subset[subsetIndex]
       setIndex += 1
+    elsif free_ingredients == 0
+      return false
     else
-      return false;
+      free_ingredients -= 1
+      subsetIndex += 1
     end
   end
 
@@ -234,9 +241,9 @@ def build_info
   ingredient_records = Ingredient.includes(:parent).all()
   ingredient_records.each do |i| 
     $ingredients[i.id] = {id: i.id, name: i.name}
-    $ingredients[i.id][:parent] = i.parent.id if i.parent
-    $ingredients[i.parent.id][:children] ||  $ingredients[i.parent.id][:children] = []
-    $ingredients[i.parent.id][:children].push($ingredients[i.id])
+    if i.parent
+      $ingredients[i.id][:parent] = i.parent.id if i.parent
+    end
     if i.name.include?('water') || i.name == 'salt' || i.name == 'pepper' || i.name == 'black pepepr'
       $common_ingredients.push({id: i.id, name: i.name})
     end

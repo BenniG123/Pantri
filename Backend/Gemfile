@@ -4,6 +4,9 @@ gem "sinatra-activerecord"
 gem "sinatra-contrib"
 gem "rake"
 gem 'puma'
+gem 'titleize'
+
+
 
 group :development do
 	gem "sqlite3"

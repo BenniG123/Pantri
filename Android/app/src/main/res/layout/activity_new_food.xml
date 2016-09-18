@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -12,50 +12,80 @@
     android:focusableInTouchMode="true"
     tools:context="prodigy.pantri.NewFoodActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Item Name" />
-
-    <EditText
-        android:id="@+id/item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quantity" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:onClick="subQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-" />
-
-        <TextView
-            android:id="@+id/quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="1" />
-
-        <Button
-            android:onClick="addQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_submit"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Item"
-        android:padding="16dp"/>
+        android:layout_margin="10sp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginLeft="10sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ingredient Name"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:layout_marginTop="45dp"
+                android:layout_weight=".8" />
+
+            <Button
+                android:onClick="submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Item"
+                android:padding="16dp"
+                android:id="@+id/btn_submit"
+                android:layout_weight="0" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity"
+                android:textSize="20sp" />
+
+            <Button
+                android:onClick="addQuantity"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="1"
+                android:textSize="30sp" />
+
+            <Button
+                android:onClick="subQuantity"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
