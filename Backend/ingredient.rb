@@ -209,14 +209,25 @@ end
 
 def flatten_ingredients(ingredients)
   added_ingredients = Set.new()
-  flattened_ingredients = ingredients.map {|i| $ingredients[i[:id]]}
+  to_visit = ingredients.map {|i| $ingredients[i[:id]]}
+  flattened_ingredients = Array.new(to_visit)
 
-  ingredients.each do |i|
+  visited_ingredients = Set.new()
+
+  to_visit.each do |i|
     parent = $ingredients[i[:parent]]
-    while parent do
-      flattened_ingredients.push(parent) unless added_ingredients.include?(parent)
-      added_ingredients.add(parent.id)
-      parent = $ingredients[parent[:parent]]
+    unless visited_ingredients.include?(parent[:id])
+      flattened_ingredients.push(parent)
+      visited_ingredients.add(parent[:id])
+      to_visit.push(parent)
+    end
+
+    i[:children].each do |child|
+      unless visited_ingredients.include?(child[:id])
+        flattened_ingredients.push(child)
+        visited_ingredients.add(child[:id])
+        to_visit.push(child)
+      end
     end
   end
 
@@ -239,6 +250,8 @@ def build_info
   ingredient_records.each do |i| 
     $ingredients[i.id] = {id: i.id, name: i.name}
     $ingredients[i.id][:parent] = i.parent.id if i.parent
+    $ingredients[i.parent.id][:children] ||  $ingredients[i.parent.id][:children] = []
+    $ingredients[i.parent.id][:children].push($ingredients[i.id])
     if i.name.include?('water') || i.name == 'salt' || i.name == 'pepper' || i.name == 'black pepepr'
       $common_ingredients.push({id: i.id, name: i.name})
     end
