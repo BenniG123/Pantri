@@ -1,43 +1,21 @@
 package prodigy.pantri;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.util.SortedList;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.Console;
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriDrawerToggle;
-import prodigy.pantri.util.PantriService;
 import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class PantriBaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,24 +67,6 @@ public class PantriBaseActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // TODO - Enter real URL
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://ITouchMyselfAtNight.com")
-                .build();
-
-        PantriService service = retrofit.create(PantriService.class);
-        // System.out.println(service.listRecipes("Token " + app.getAuthToken()));
-
-        /* SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.getString("pref_name", "");
-        prefs.getString("pref_email", "");
-        */
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -121,8 +81,8 @@ public class PantriBaseActivity extends AppCompatActivity
             ret = new Intent(context, FoodSearchActivity.class);
         } else if (id == R.id.nav_view_pantry && !(this instanceof ViewPantryActivity)) {
             ret = new Intent(context, ViewPantryActivity.class);
-        } else if (id == R.id.nav_cook && !(this instanceof CookActivity)) {
-            ret = new Intent(context, CookActivity.class);
+        } else if (id == R.id.nav_recipes && !(this instanceof ViewRecipesActivity)) {
+            ret = new Intent(context, ViewRecipesActivity.class);
         } else if (id == R.id.nav_shopping_list && !(this instanceof ShoppingListActivity)) {
             ret = new Intent(context, ShoppingListActivity.class);
         } else if (id == R.id.nav_settings) {
