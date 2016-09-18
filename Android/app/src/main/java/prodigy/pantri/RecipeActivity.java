@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.webkit.WebView;
@@ -37,31 +38,44 @@ public class RecipeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         r = (Recipe) getIntent().getSerializableExtra("recipe");
 
-        final ColorStateList darker_gray = fab.getBackgroundTintList();
-        final ColorStateList yellow = ColorStateList.valueOf(Color.rgb(255, 180, 0));
-
-        // Set favorite icon
-        if (r.isFavorite) {
-            fab.setBackgroundTintList(yellow);
-        }
 
         // Create text view
-        String recipeInstructions = "<body bgcolor=\"#fafafa\"><p style=\"font-weight:bold;font-size:20\">Ingredients</p>";
-        for (String s : r.ingredients) {
-            recipeInstructions += s + "<br />";
-        }
-        recipeInstructions += "<br /><p style=\"font-weight:bold;font-size:20\">Instructions</p>";
-        for (String s : r.steps) {
-            recipeInstructions += s + "<br />";
-        }
-        recipeInstructions += "</body>";
+        StringBuilder recipeInstructions = new StringBuilder(
+                "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<head>" +
+                        "<link href=\"https://fonts.googleapis.com/css?family=Lora\" rel=\"stylesheet\">" +
+                        "<style>" +
 
+                            "h1 {" +
+                                "font-size: 24px;" +
+                                "font-family: 'Lora', serif;" +
+                            "}" +
+
+                            "p, li {" +
+                                "font-family: 'Lora', serif;" +
+                            "}" +
+                        "</style></head>" +
+                        "<body><h1>Ingredients</h1><ul>"
+        );
+        for (String s : r.ingredients) {
+            recipeInstructions.append("<li>").append(s).append("</li>");
+        }
+        recipeInstructions.append("</ul>");
+
+        recipeInstructions.append("<h1>Instructions</h1>");
+        recipeInstructions.append("<ol>");
+        for (String s : r.steps) {
+            recipeInstructions.append("<li><p>").append(s).append("</p></li>");
+        }
+        recipeInstructions.append("</ol></body></html>");
+
+        Log.e("Hey", recipeInstructions.toString());
         WebView wv = (WebView) findViewById(R.id.id_txt_recipe);
-        wv.loadData(recipeInstructions, "text/html", null);
+        wv.loadData(recipeInstructions.toString(), "text/html", null);
 
         // Load the image URL
         ImageView recipeImage = (ImageView) findViewById(R.id.img_recipe_view);
@@ -75,25 +89,6 @@ public class RecipeActivity extends AppCompatActivity {
                 .into(recipeImage);
 
         setTitle(r.name);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (r.isFavorite) {
-                    r.isFavorite = false;
-                    Snackbar.make(view, "Recipe Un-Favorited", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    view.setBackgroundTintList(darker_gray);
-                }
-                else {
-                    r.isFavorite = true;
-                    Snackbar.make(view, "Recipe Favorited!", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    view.setBackgroundTintList(yellow);
-                }
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
