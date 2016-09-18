@@ -45,15 +45,11 @@ public class NewFoodActivity extends AppCompatActivity implements Runnable {
     }
 
     public void submit(View v) {
-        // TODO - REST Call to add ingredient to server
-        // Get recipes (AsyncTask?)
         mTask = new ServerCommsTask(TaskType.ADD_INGREDIENT, (PantriApplication) getApplication(), ((TextView) findViewById(R.id.item_name)).getText().toString());
         mTask.execute();
 
         mHandler = new Handler();
         mHandler.post(this);
-        // Only let them add something that is in the master ingredient array
-
     }
 
     @Override

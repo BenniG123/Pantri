@@ -112,13 +112,24 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                     Recipe tmp = new Recipe();
                     JSONObject recipe = (JSONObject) arr.get(i);
 
-                    // public List<String> ingredients;
-                    // public List<String> steps;
-
                     tmp.id = recipe.getInt("id");
                     tmp.name = recipe.getString("name");
                     tmp.thumbnail = recipe.getString("thumbnail");
                     tmp.image = recipe.getString("image");
+
+                    tmp.ingredients = new ArrayList<>();
+                    JSONArray jsonIngredients = recipe.getJSONArray("ingredients");
+
+                    for (int j = 0; j < jsonIngredients.length(); j++) {
+                        tmp.ingredients.add(jsonIngredients.getString(j));
+                    }
+
+                    tmp.steps = new ArrayList<>();
+                    JSONArray jsonSteps = recipe.getJSONArray("steps");
+
+                    for (int j = 0; j < jsonSteps.length(); j++) {
+                        tmp.steps.add(jsonSteps.getString(j));
+                    }
 
                     recipeList.add(tmp);
                 }
