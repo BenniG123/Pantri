@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,5 +35,14 @@ public class MainActivity extends PantriBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_main);
+
+        LinearLayout recipeScroller = (LinearLayout) findViewById(R.id.recipe_card_view);
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for (int i = 0; i < 5; i++) {
+            View card = inflater.inflate(R.layout.horizontal_recipe_adapter, null);
+            TextView text = (TextView) card.findViewById(R.id.info_text);
+            text.setText("Old Fashion Pumpkin Pie");
+            recipeScroller.addView(card);
+        }
     }
 }
