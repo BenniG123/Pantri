@@ -241,9 +241,9 @@ def build_info
   ingredient_records = Ingredient.includes(:parent).all()
   ingredient_records.each do |i| 
     $ingredients[i.id] = {id: i.id, name: i.name}
-    $ingredients[i.id][:parent] = i.parent.id if i.parent
-    $ingredients[i.parent.id][:children] ||  $ingredients[i.parent.id][:children] = []
-    $ingredients[i.parent.id][:children].push($ingredients[i.id])
+    if i.parent
+      $ingredients[i.id][:parent] = i.parent.id if i.parent
+    end
     if i.name.include?('water') || i.name == 'salt' || i.name == 'pepper' || i.name == 'black pepepr'
       $common_ingredients.push({id: i.id, name: i.name})
     end
