@@ -1,3 +1,4 @@
+require 'set'
 BIWORD_FACTOR = 5
 
 def max_rank(ingredient_id)
@@ -150,12 +151,13 @@ def lookup_upc(upc)
 end
 
 def lookup_recipes(ingredients)
-  flattened_ingredients = flatten_ingredients(ingredients.to_a).map {|i| i.id}.sort()
+  combined_ingredients = ingredients.to_a.concat($common_ingredients)
+  flattened_ingredients = flatten_ingredients(combined_ingredients).map{|i| i[:id]}.sort()
   possible_recipes = $recipe_id_ingredients.keys.keep_if do |id|
     sorted_subset?(flattened_ingredients, $recipe_id_ingredients[id])
   end
 
-  return Recipe.find_all(possible_recipes)
+  return Recipe.find(possible_recipes.first(50))
 end
 
 def sorted_subset?(set, subset)
@@ -178,15 +180,15 @@ def sorted_subset?(set, subset)
 end
 
 def flatten_ingredients(ingredients)
-  added_ingredients = new Set()
-  flattened_ingredients = new Array(ingredients)
+  added_ingredients = Set.new()
+  flattened_ingredients = ingredients.map {|i| $ingredients[i[:id]]}
 
   ingredients.each do |i|
-    parent = i.parent
+    parent = $ingredients[i[:parent]]
     while parent do
       flattened_ingredients.push(parent) unless added_ingredients.include?(parent)
       added_ingredients.add(parent.id)
-      parent = parent.parent
+      parent = $ingredients[parent[:parent]]
     end
   end
 
@@ -203,9 +205,17 @@ end
 
 def build_info
   $ingredients = {}
+  $common_ingredients = []
 
-  ingredient_records = Ingredient.all.to_a()
-  ingredient_records.each { |i| $ingredients[i.id] = i }
+  ingredient_records = Ingredient.includes(:parent).all()
+  ingredient_records.each do |i| 
+    $ingredients[i.id] = {id: i.id, name: i.name}
+    $ingredients[i.id][:parent] = i.parent.id if i.parent
+    if i.name.include?('water') || i.name == 'salt' || i.name == 'pepper' || i.name == 'black pepepr'
+      $common_ingredients.push({id: i.id, name: i.name})
+    end
+  end
+
   build_term_vector($ingredients.values)
   build_biword_vector($ingredients.values)
   build_recipe_info()
@@ -219,7 +229,7 @@ def build_term_vector(ingredients)
   term_counts = []
   total_counted = 0
   ingredients.each do |ingredient|
-    terms = ingredient.name.split()
+    terms = ingredient[:name].split()
     terms.each do |term|
       $term_id_table[term] = term_counts.size unless $term_id_table.has_key?(term)
       id = $term_id_table[term]
@@ -227,7 +237,7 @@ def build_term_vector(ingredients)
       term_counts[id] || term_counts[id] = 0
       term_counts[id] += 1
       $term_postings[id] || $term_postings[id]= []
-      $term_postings[id].push(ingredient.id)
+      $term_postings[id].push(ingredient[:id])
       total_counted += 1
     end
   end
@@ -244,12 +254,12 @@ def build_biword_vector(ingredients)
   biwords = []
   
   ingredients.each do |ingredient|
-    split_into_biwords(ingredient.name).each do |biword|
+    split_into_biwords(ingredient[:name]).each do |biword|
       $biword_id_table[biword] = biword_counts.size unless $biword_id_table.has_key?(biword)
       id = $biword_id_table[biword]
 
       $biword_postings[id] || $biword_postings[id]= []
-      $biword_postings[id].push(ingredient.id)
+      $biword_postings[id].push(ingredient[:id])
       biword_counts[id] || biword_counts[id] = 0
       biword_counts[id] += 1
       total_counted += 1

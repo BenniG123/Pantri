@@ -55,7 +55,7 @@ end
 
 put '/pantry/:id' do
   return 401 unless @user
-  ingredient = Ingredient.find_by_id(:id)
+  ingredient = Ingredient.find_by_id(params[:id])
   return 404 unless ingredient
   @user.ingredients.push(ingredient)
   @user.save
@@ -74,8 +74,8 @@ get '/recipe/' do
       thumbnail: r.thumbnail,
       image: r.image,
       cookTime: r.cook_time,
-      ingredients: r.ingredients.split('\0'),
-      steps: r.ingredients.split('\0')
+      ingredients: r.ingredient_text.split('\0'),
+      steps: r.steps.split('\0')
     }
   end
 
