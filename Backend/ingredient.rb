@@ -1,33 +1,52 @@
 BIWORD_FACTOR = 5
 
+def max_rank(ingredient_id)
+  rank = 0
+  name = $ingredients[ingredient_id].name
+  name.split.each { |term| rank += $term_ranks[$term_id_table[term]]}
+  split_into_biwords(name).each {|biword| rank += BIWORD_FACTOR * $biword_ranks[$biword_id_table[biword]]}
+
+  return rank
+end
+
 def classify_ingredient(product_name)
   normalized_name = normalize_string(product_name)
-  terms = normalized_name.split().map {|term| @term_id_table[term]}
-  biwords = split_into_biwords(normalized_name).map {|biword| @biword_id_table[biword]}
+  terms = normalized_name.split().map {|term| $term_id_table[term]}
+  biwords = split_into_biwords(normalized_name).map {|biword| $biword_id_table[biword]}
 
   ingredient_ranks = {}
   terms.each do |term|
-    ingredients = @term_postings[term]
+    next unless term
+    ingredients = $term_postings[term]
     ingredients.each do |ingredient|
       ingredient_ranks[ingredient] || ingredient_ranks[ingredient] = 0
-      ingredient_ranks[ingredient] += @term_ranks[term]
+      ingredient_ranks[ingredient] += $term_ranks[term]
     end
   end
 
   biwords.each do |biword|
-    ingredients = @biword_postings[biword]
+    next unless biword
+    ingredients = $biword_postings[biword]
     ingredients.each do |ingredient|
       ingredient_ranks[ingredient] || ingredient_ranks[ingredient] = 0
-      ingredient_ranks[ingredient] += BIWORD_FACTOR * @biword_ranks[biword]
+      ingredient_ranks[ingredient] += BIWORD_FACTOR * $biword_ranks[biword]
     end
   end
 
   return nil if ingredient_ranks.empty?
+  
   top_ingredient = ingredient_ranks.keys.reduce do |top, ingredient|
-    if ingredient_ranks[ingredient] < ingredient_ranks[top]
+    normalized_top = ingredient_ranks[top] / max_rank(top)
+    normalized_ingredient = ingredient_ranks[ingredient] / max_rank(ingredient)
+
+    if normalized_top > normalized_ingredient
+      top
+    elsif normalized_top < normalized_ingredient
+      ingredient
+    elsif ingredient_ranks[top] > ingredient_ranks[ingredient]
       top
     else
-      ingredient 
+      ingredient
     end
   end
 
@@ -35,7 +54,95 @@ def classify_ingredient(product_name)
 end
 
 def normalize_string(str)
-  str.downcase()
+  stop_patterns = [
+    /[0-9]*/,
+    /\(.*\)/,
+    /\sto taste/,
+    /\sas needed/,
+    /\sfor\s.*$/,
+    /[\s^][\w'*]*[®™]/,
+    /cans?\s/,
+    /cupss?\s/,
+    /ounces?\s/,
+    /packages?\s/,
+    /quarts?\s/,
+    /cups?\s/,
+    /bunch\s/,
+    /bunches\s/,
+    /bottle\s/,
+    /pounds?\s/,
+    /fluid ounces?/,
+    /gallons?\s/,
+    /liters?\s/,
+    /pints?\s/,
+    /pieces?\s/,  
+    /jars?\s/,
+    /teaspoons?\s/,
+    /packets?\s/,
+    /containers?\s/,
+    /tablespoons?\s/,
+    /envelopes?\s/,
+    /fat free\s/,
+    /fillets?\s/,
+    /slice[^d]\s/,
+    /slices\s/,
+    /strips\s/,
+    /sprigs\s/,
+    /^loaf\s/,
+    /pinch\s/,
+    /pinches\s/,
+    /jiggers?\s/,
+    /bags?\s/,
+    /heads?\s/,
+    /cloves?\s/,
+    /coarsely\s/,
+    /roughly\s/,
+    /thickly\s/,
+    /thinly\s/,
+    /uncokked\s/,
+    /freshly\s/,
+    /finely\s/,
+    /diced\s/,
+    /shredded\s/,
+    /prepared\s/,
+    /minced\s/,
+    /ground\s/,
+    /chopped\s/,
+    /peeled\s/,
+    /grated\s/,
+    /fresh\s/,
+    /canned\s/,
+    /frozen\s/,
+    /dried\s/,
+    /bottles?\s/,
+    /sliced?\s/,
+    /wedges?\s/,
+    /small\s/,
+    /medium\s/,
+    /large\s/,
+    /inch\s/,
+    /^\s*of\s/,
+    /^\s*for\s/,
+    /,.*/,
+    /[\/:%]/,
+    / - .*$/,
+    /^or\s/,
+    /^and\s/
+  ]
+
+  processed = str.downcase;
+  processed.gsub!(/\s+/, ' ')
+  processed.strip!()
+
+  stop_patterns.each do |pattern|
+    processed.gsub!(pattern, '')
+  end
+
+  processed.gsub!('-', ' ')
+  processed.gsub!(/\s+/, ' ')
+  processed.strip!()
+  
+  return processed.singularize
 end
 
 def lookup_upc(upc)
@@ -44,8 +151,8 @@ end
 
 def lookup_recipes(ingredients)
   flattened_ingredients = flatten_ingredients(ingredients.to_a).map {|i| i.id}.sort()
-  possible_recipes = @recipe_id_ingredients.keys.keep_if do |id|
-    sorted_subset?(flattened_ingredients, @recipe_id_ingredients[id])
+  possible_recipes = $recipe_id_ingredients.keys.keep_if do |id|
+    sorted_subset?(flattened_ingredients, $recipe_id_ingredients[id])
   end
 
   return Recipe.find_all(possible_recipes)
@@ -87,50 +194,50 @@ def flatten_ingredients(ingredients)
 end
 
 def build_recipe_info
-  @recipes = Recipe.includes(:ingredients).all.to_a()
-  @recipe_id_ingredients = {}
-  @recipes.each do |r|
-    @recipe_id_ingredients[r] = r.ingredients.map {|i| i.id}.sort()
+  $recipes = Recipe.includes(:ingredients).all.to_a()
+  $recipe_id_ingredients = {}
+  $recipes.each do |r|
+    $recipe_id_ingredients[r] = r.ingredients.map {|i| i.id}.sort()
   end
 end
 
 def build_info
-  @ingredients = {}
+  $ingredients = {}
 
   ingredient_records = Ingredient.all.to_a()
-  ingredient_records.each { |i| @ingredients[i.id] = i }
-  build_term_vector(@ingredients.values)
-  build_biword_vector(@ingredients.values)
+  ingredient_records.each { |i| $ingredients[i.id] = i }
+  build_term_vector($ingredients.values)
+  build_biword_vector($ingredients.values)
   build_recipe_info()
 end
 
 
 def build_term_vector(ingredients)
-  @term_id_table = {}
-  @term_postings = []
+  $term_id_table = {}
+  $term_postings = []
 
   term_counts = []
   total_counted = 0
   ingredients.each do |ingredient|
     terms = ingredient.name.split()
     terms.each do |term|
-      @term_id_table[term] = term_counts.size unless @term_id_table.has_key?(term)
-      id = @term_id_table[term]
+      $term_id_table[term] = term_counts.size unless $term_id_table.has_key?(term)
+      id = $term_id_table[term]
       
       term_counts[id] || term_counts[id] = 0
       term_counts[id] += 1
-      @term_postings[id] || @term_postings[id]= []
-      @term_postings[id].push(ingredient.id)
+      $term_postings[id] || $term_postings[id]= []
+      $term_postings[id].push(ingredient.id)
       total_counted += 1
     end
   end
 
-  @term_ranks = term_counts.map { |count| Math.log(total_counted / count) }
+  $term_ranks = term_counts.map { |count| Math.log(total_counted / count) }
 end
 
 def build_biword_vector(ingredients)
-  @biword_id_table = {}
-  @biword_postings = []
+  $biword_id_table = {}
+  $biword_postings = []
 
   biword_counts = []
   total_counted = 0
@@ -138,18 +245,18 @@ def build_biword_vector(ingredients)
   
   ingredients.each do |ingredient|
     split_into_biwords(ingredient.name).each do |biword|
-      @biword_id_table[biword] = biword_counts.size unless @biword_id_table.has_key?(biword)
-      id = @biword_id_table[biword]
+      $biword_id_table[biword] = biword_counts.size unless $biword_id_table.has_key?(biword)
+      id = $biword_id_table[biword]
 
-      @biword_postings[id] || @biword_postings[id]= []
-      @biword_postings[id].push(ingredient.id)
+      $biword_postings[id] || $biword_postings[id]= []
+      $biword_postings[id].push(ingredient.id)
       biword_counts[id] || biword_counts[id] = 0
       biword_counts[id] += 1
       total_counted += 1
     end
   end
 
-  @biword_ranks = biword_counts.map { |count| Math.log(total_counted / count) }
+  $biword_ranks = biword_counts.map { |count| Math.log(total_counted / count) }
 end
 
 def split_into_biwords(str)

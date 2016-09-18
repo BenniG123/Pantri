@@ -82,11 +82,20 @@ get '/recipe/' do
   return json recipes: formatted_recipes
 end
 
-get '/ingredient/upc' do
+get '/ingredient/upc/:upc' do
   return 400 unless params[:upc]
   product_name = lookup_upc(params[:upc])
   return 404 unless product_name
   ingredient = classify_ingredient(product_name)
+  return 404 unless ingredient
+
+  return json ingredient: {id: ingredient.id, name: ingredient.name}
+end
+
+get '/ingredient/name/:name' do
+  return 400 unless params[:name]
+
+  ingredient = classify_ingredient(params[:name])
   return 404 unless ingredient
 
   return json ingredient: {id: ingredient.id, name: ingredient.name}
