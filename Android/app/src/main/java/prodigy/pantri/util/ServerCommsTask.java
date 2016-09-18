@@ -35,21 +35,21 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
     private TaskType mTask;
     private String mParam;
     private int mID;
+    private Runnable mCallback;
     public List<Ingredient> pantry = null;
     public List<Recipe> recipes = null;
     public Ingredient ingredient;
     public boolean opDone;
 
     public ServerCommsTask(TaskType task, PantriApplication app) {
-        mApp = app;
-        mTask = task;
-        pantry = null;
-        opDone = false;
-        recipes = null;
-        ingredient = null;
+        this(task, app, null);
     }
 
     public ServerCommsTask(TaskType task, PantriApplication app, String param) {
+        this(task, app, param, null);
+    }
+
+    public ServerCommsTask(TaskType task, PantriApplication app, String param, Runnable callback) {
         mApp = app;
         mTask = task;
         mParam = param;
@@ -57,6 +57,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         opDone = false;
         recipes = null;
         ingredient = null;
+        mCallback = callback;
     }
 
     public ServerCommsTask(TaskType task, PantriApplication app, int id) {
@@ -100,7 +101,9 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                 break;
         }
         opDone = true;
-
+        if (mCallback != null) {
+            mCallback.run();
+        }
         return true;
     }
 
