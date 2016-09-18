@@ -94,8 +94,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         ingredient = null;
         mQuantity = quantity;
     }
-
-
+    
     @Override
     protected Boolean doInBackground(Void... voids) {
         switch (mTask) {
