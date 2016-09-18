@@ -6,7 +6,7 @@ BIWORD_FACTOR = 5
 
 def max_rank(ingredient_id)
   rank = 0
-  name = $ingredients[ingredient_id].name
+  name = $ingredients[ingredient_id][:name]
   name.split.each { |term| rank += $term_ranks[$term_id_table[term]]}
   split_into_biwords(name).each {|biword| rank += BIWORD_FACTOR * $biword_ranks[$biword_id_table[biword]]}
 
