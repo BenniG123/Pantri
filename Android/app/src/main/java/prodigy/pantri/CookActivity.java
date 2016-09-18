@@ -47,7 +47,6 @@ public class CookActivity extends PantriBaseActivity implements Runnable {
             @Override
             public void run() {
                 if (mTask.recipes.size() > 0) {
-
                     // Set up list view
                     listAdapter = new RecipeListAdapter(getApplicationContext(), mTask.recipes);
                     listView = (ListView) findViewById(R.id.list_view);

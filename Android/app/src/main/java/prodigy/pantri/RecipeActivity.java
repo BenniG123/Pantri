@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import prodigy.pantri.util.Ingredient;
 import prodigy.pantri.util.Recipe;
 
 public class RecipeActivity extends AppCompatActivity {
