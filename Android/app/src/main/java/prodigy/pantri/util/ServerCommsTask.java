@@ -35,6 +35,8 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
     private TaskType mTask;
     private String mParam;
     private int mID;
+    private int mQuantity;
+
     public List<Ingredient> pantry = null;
     public List<Recipe> recipes = null;
     public Ingredient ingredient;
@@ -70,6 +72,30 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         ingredient = null;
     }
 
+    public ServerCommsTask(TaskType task, PantriApplication app, int id, int quantity) {
+        mApp = app;
+        mTask = task;
+        mParam = null;
+        mID = id;
+        pantry = null;
+        opDone = false;
+        recipes = null;
+        ingredient = null;
+        mQuantity = quantity;
+    }
+
+    public ServerCommsTask(TaskType task, PantriApplication app, String param, int quantity) {
+        mApp = app;
+        mTask = task;
+        mParam = param;
+        pantry = null;
+        opDone = false;
+        recipes = null;
+        ingredient = null;
+        mQuantity = quantity;
+    }
+
+
     @Override
     protected Boolean doInBackground(Void... voids) {
         switch (mTask) {
@@ -84,10 +110,21 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                 break;
             case ADD_INGREDIENT:
                 ingredient = getIngredientByName(mApp, mParam);
-                addIngredient(mApp, ingredient.id);
+                if (mQuantity > 1) {
+                    addIngredient(mApp, ingredient.id, mQuantity);
+                }
+                else {
+                    addIngredient(mApp, ingredient.id);
+                }
                 break;
             case DEL_INGREDIENT:
                 deleteIngredient(mApp, mID);
+                break;
+            case DEC_INGREDIENT:
+                deleteIngredient(mApp, mID, mQuantity);
+                break;
+            case INC_INGREDIENT:
+                addIngredient(mApp, mID, mQuantity);
                 break;
             case GET_INGREDIENT_UPC:
                 ingredient = getIngredientByUPC(mApp, mParam);
@@ -179,6 +216,21 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         }
     }
 
+    private void addIngredient(PantriApplication app, int id, int quantity) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.incIngredient("Token " + app.getAuthToken(), id, quantity);
+        try {
+            authResponse.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void deleteIngredient(PantriApplication app, int id) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(app.getString(R.string.rest_url))
@@ -187,6 +239,22 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         PantriService service = retrofit.create(PantriService.class);
 
         Call<ResponseBody> authResponse = service.deleteIngredient("Token " + app.getAuthToken(), id);
+        try {
+            authResponse.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteIngredient(PantriApplication app, int id, int quantity) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.decIngredient("Token " + app.getAuthToken(), id, quantity);
+
         try {
             authResponse.execute();
         } catch (IOException e) {
@@ -278,6 +346,8 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
 
                     tmp.id = ingred.getInt("id");
                     tmp.name = ingred.getString("name");
+                    tmp.quantity = ingred.getInt("quantity");
+
                     pantryList.add(tmp);
                 }
             }

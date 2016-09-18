@@ -36,8 +36,14 @@ public interface PantriService {
     @DELETE("pantry/{id}")
     Call<ResponseBody> deleteIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
 
+    @DELETE("pantry/{id}")
+    Call<ResponseBody> decIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID, @Query("quantity") int quantity);
+
     @PUT("pantry/{id}")
     Call<ResponseBody> addIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
+
+    @PUT("pantry/{id}")
+    Call<ResponseBody> incIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID, @Query("quantity") int quantity);
 
     @GET("ingredient/upc/{upc}")
     Call<ResponseBody> getIngredientUPC(@Header("Authorization") String authorization, @Path("upc") String upc);

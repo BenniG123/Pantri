@@ -50,18 +50,37 @@ public class PantryItemView extends LinearLayout implements Runnable {
         nameView.setText(ingredient.name);
         nameView.setTextColor(Color.BLACK);
 
+        TextView quantityView = (TextView) findViewById(R.id.txt_quantity);
+        quantityView.setTextSize(18);
+        quantityView.setTextColor(Color.BLACK);
+        quantityView.setText(Integer.toString(ingredient.quantity));
+
         Button decrementButton = (Button) findViewById(R.id.btn_minus);
         decrementButton.setOnClickListener(new OnClickListener() {
                @Override
                public void onClick(View v) {
                    // Get list of ingredients
-                   mTask = new ServerCommsTask(TaskType.DEL_INGREDIENT, (PantriApplication) mContext, ingredient.id);
+                   mTask = new ServerCommsTask(TaskType.DEC_INGREDIENT, (PantriApplication) mContext, ingredient.id, 1);
                    mTask.execute();
 
                    mHandler = new Handler();
                    mHandler.post(mRunnable);
                }
            }
+        );
+
+        Button incrementButton = (Button) findViewById(R.id.btn_plus);
+        incrementButton.setOnClickListener(new OnClickListener() {
+                                               @Override
+                                               public void onClick(View v) {
+               // Get list of ingredients
+               mTask = new ServerCommsTask(TaskType.INC_INGREDIENT, (PantriApplication) mContext, ingredient.id, 1);
+               mTask.execute();
+
+               mHandler = new Handler();
+               mHandler.post(mRunnable);
+           }
+       }
         );
 
     }

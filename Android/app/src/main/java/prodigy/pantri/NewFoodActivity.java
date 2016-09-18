@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class NewFoodActivity extends AppCompatActivity implements Runnable {
     int quantity = 1;
     private ServerCommsTask mTask;
     private Handler mHandler;
+    private NewFoodActivity mNewFoodActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,22 @@ public class NewFoodActivity extends AppCompatActivity implements Runnable {
             TextView itemName = (TextView) findViewById(R.id.item_name);
             itemName.setText(i.getStringExtra("name"));
         }
+
+        mNewFoodActivity = this;
+
+        Button b = (Button) findViewById(R.id.btn_submit);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nameString = ((TextView) findViewById(R.id.item_name)).getText().toString();
+
+                mTask = new ServerCommsTask(TaskType.ADD_INGREDIENT, (PantriApplication) getApplication(), nameString, quantity);
+                mTask.execute();
+
+                mHandler = new Handler();
+                mHandler.post(mNewFoodActivity);
+            }
+        });
     }
 
     public void subQuantity(View v) {
@@ -44,16 +62,9 @@ public class NewFoodActivity extends AppCompatActivity implements Runnable {
         ((TextView) findViewById(R.id.quantity)).setText(String.valueOf(quantity));
     }
 
-    public void submit(View v) {
-        mTask = new ServerCommsTask(TaskType.ADD_INGREDIENT, (PantriApplication) getApplication(), ((TextView) findViewById(R.id.item_name)).getText().toString());
-        mTask.execute();
-
-        mHandler = new Handler();
-        mHandler.post(this);
-    }
-
     @Override
     public void run() {
+        while(!mTask.opDone) ;
         finish();
     }
 }
