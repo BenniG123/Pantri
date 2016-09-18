@@ -10,11 +10,13 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import prodigy.pantri.util.Ingredient;
 import prodigy.pantri.util.PantriApplication;
+import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
 
-public class NewFoodActivity extends AppCompatActivity implements Runnable {
+public class NewFoodActivity extends AppCompatActivity implements PantriCallback<Ingredient> {
 
     int quantity = 1;
     private ServerCommsTask mTask;
@@ -40,11 +42,8 @@ public class NewFoodActivity extends AppCompatActivity implements Runnable {
             public void onClick(View v) {
                 String nameString = ((TextView) findViewById(R.id.item_name)).getText().toString();
 
-                mTask = new ServerCommsTask(TaskType.ADD_INGREDIENT, (PantriApplication) getApplication(), nameString, quantity);
+                mTask = new ServerCommsTask<>(TaskType.ADD_INGREDIENT, null, (PantriApplication) getApplication(), nameString, quantity);
                 mTask.execute();
-
-                mHandler = new Handler();
-                mHandler.post(mNewFoodActivity);
             }
         });
     }
@@ -62,9 +61,15 @@ public class NewFoodActivity extends AppCompatActivity implements Runnable {
         ((TextView) findViewById(R.id.quantity)).setText(String.valueOf(quantity));
     }
 
+    public void submit(View v) {
+        String name = ((TextView) findViewById(R.id.item_name)).getText().toString();
+        String quantity = ((TextView) findViewById(R.id.quantity)).getText().toString();
+        mTask = new ServerCommsTask<>(TaskType.ADD_INGREDIENT, this, (PantriApplication) getApplication(), name, Integer.parseInt(quantity));
+        mTask.execute();
+    }
+
     @Override
-    public void run() {
-        while(!mTask.opDone) ;
+    public void run(Ingredient arg) {
         finish();
     }
 }

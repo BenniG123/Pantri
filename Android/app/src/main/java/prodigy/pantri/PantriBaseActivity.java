@@ -75,9 +75,7 @@ public class PantriBaseActivity extends AppCompatActivity
         int id = item.getItemId();
         Context context = getApplicationContext();
 
-        if (id == R.id.nav_home && !(this instanceof MainActivity)) {
-            ret = new Intent(context, MainActivity.class);
-        } else if (id == R.id.nav_add_food && !(this instanceof FoodSearchActivity)) {
+       if (id == R.id.nav_add_food && !(this instanceof FoodSearchActivity)) {
             ret = new Intent(context, FoodSearchActivity.class);
         } else if (id == R.id.nav_view_pantry && !(this instanceof ViewPantryActivity)) {
             ret = new Intent(context, ViewPantryActivity.class);
@@ -88,7 +86,7 @@ public class PantriBaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             ret = new Intent(context, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            ServerCommsTask task = new ServerCommsTask(TaskType.LOGOUT, app);
+            ServerCommsTask task = new ServerCommsTask<>(TaskType.LOGOUT, null, app);
             task.execute();
             ret = new Intent(context, LoginActivity.class);
         }

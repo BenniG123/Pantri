@@ -44,6 +44,7 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import prodigy.pantri.util.PantriApplication;
+import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.util.PantriService;
 import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
@@ -56,12 +57,11 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements Runnable {
+public class LoginActivity extends AppCompatActivity implements PantriCallback<Void> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private ServerCommsTask mAuthTask = null;
-    private Handler mHandler;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -149,11 +149,8 @@ public class LoginActivity extends AppCompatActivity implements Runnable {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new ServerCommsTask(TaskType.LOGIN, (PantriApplication) getApplication(), email);
+            mAuthTask = new ServerCommsTask<>(TaskType.LOGIN, this, (PantriApplication) getApplication(), email);
             mAuthTask.execute();
-
-            mHandler = new Handler();
-            mHandler.post(this);
         }
     }
 
@@ -204,18 +201,21 @@ public class LoginActivity extends AppCompatActivity implements Runnable {
     }
 
     @Override
-    public void run() {
-        while (!mAuthTask.opDone);
+    public void run(Void v) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAuthTask = null;
+                showProgress(false);
 
-        mAuthTask = null;
-        showProgress(false);
-
-        if (((PantriApplication) getApplication()).getAuthToken() != null) {
-            finish();
-        } else {
-            mPasswordView.setError(getString(R.string.error_incorrect_password));
-            mPasswordView.requestFocus();
-        }
+                if (((PantriApplication) getApplication()).getAuthToken() != null) {
+                    finish();
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
+            }
+        });
     }
 }
 

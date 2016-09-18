@@ -11,33 +11,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160918024957) do
+ActiveRecord::Schema.define(version: 20160918044257) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  create_table "amounts", id: false, force: :cascade do |t|
+    t.integer "ingredient_id"
+    t.integer "user_id"
+    t.integer "quantity"
+  end
+
+  add_index "amounts", ["ingredient_id"], name: "index_amounts_on_ingredient_id"
+  add_index "amounts", ["user_id"], name: "index_amounts_on_user_id"
 
   create_table "ingredients", force: :cascade do |t|
     t.string  "name"
     t.integer "parent_id"
   end
 
-  add_index "ingredients", ["parent_id"], name: "index_ingredients_on_parent_id", using: :btree
+  add_index "ingredients", ["parent_id"], name: "index_ingredients_on_parent_id"
 
   create_table "ingredients_recipes", id: false, force: :cascade do |t|
     t.integer "ingredient_id"
     t.integer "recipe_id"
   end
 
-  add_index "ingredients_recipes", ["ingredient_id"], name: "index_ingredients_recipes_on_ingredient_id", using: :btree
-  add_index "ingredients_recipes", ["recipe_id"], name: "index_ingredients_recipes_on_recipe_id", using: :btree
+  add_index "ingredients_recipes", ["ingredient_id"], name: "index_ingredients_recipes_on_ingredient_id"
+  add_index "ingredients_recipes", ["recipe_id"], name: "index_ingredients_recipes_on_recipe_id"
 
   create_table "ingredients_users", id: false, force: :cascade do |t|
     t.integer "user_id"
     t.integer "ingredient_id"
   end
 
-  add_index "ingredients_users", ["ingredient_id"], name: "index_ingredients_users_on_ingredient_id", using: :btree
-  add_index "ingredients_users", ["user_id"], name: "index_ingredients_users_on_user_id", using: :btree
+  add_index "ingredients_users", ["ingredient_id"], name: "index_ingredients_users_on_ingredient_id"
+  add_index "ingredients_users", ["user_id"], name: "index_ingredients_users_on_user_id"
 
   create_table "recipes", force: :cascade do |t|
     t.string "name"
@@ -53,13 +59,13 @@ ActiveRecord::Schema.define(version: 20160918024957) do
     t.string  "token"
   end
 
-  add_index "sessions", ["token"], name: "index_sessions_on_token", unique: true, using: :btree
-  add_index "sessions", ["user_id"], name: "index_sessions_on_user_id", using: :btree
+  add_index "sessions", ["token"], name: "index_sessions_on_token", unique: true
+  add_index "sessions", ["user_id"], name: "index_sessions_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string "email"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
 
 end

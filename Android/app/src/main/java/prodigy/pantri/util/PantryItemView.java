@@ -60,7 +60,7 @@ public class PantryItemView extends LinearLayout implements Runnable {
                @Override
                public void onClick(View v) {
                    // Get list of ingredients
-                   mTask = new ServerCommsTask(TaskType.DEC_INGREDIENT, (PantriApplication) mContext, ingredient.id, 1);
+                   mTask = new ServerCommsTask<>(TaskType.DEC_INGREDIENT, null, (PantriApplication) mContext, ingredient.id, 1);
                    mTask.execute();
 
                    mHandler = new Handler();
@@ -74,7 +74,7 @@ public class PantryItemView extends LinearLayout implements Runnable {
                                                @Override
                                                public void onClick(View v) {
                // Get list of ingredients
-               mTask = new ServerCommsTask(TaskType.INC_INGREDIENT, (PantriApplication) mContext, ingredient.id, 1);
+               mTask = new ServerCommsTask<>(TaskType.INC_INGREDIENT, null, (PantriApplication) mContext, ingredient.id, 1);
                mTask.execute();
 
                mHandler = new Handler();
@@ -87,8 +87,6 @@ public class PantryItemView extends LinearLayout implements Runnable {
 
     @Override
     public void run() {
-        while (!mTask.opDone);
-
         // Refresh the page
         mViewPantryActivity.refresh();
     }

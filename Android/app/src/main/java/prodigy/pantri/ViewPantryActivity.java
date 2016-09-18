@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import prodigy.pantri.util.Ingredient;
+import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.util.PantryItemAdapter;
 import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
 
-public class ViewPantryActivity extends PantriBaseActivity implements Runnable {
-    private Handler mHandler;
+public class ViewPantryActivity extends PantriBaseActivity implements PantriCallback<List<Ingredient>> {
     private ServerCommsTask mTask;
     private List<Ingredient> mIngredientList;
     private ViewPantryActivity mViewPantryActivity;
@@ -36,21 +36,17 @@ public class ViewPantryActivity extends PantriBaseActivity implements Runnable {
 
     public void refresh() {
         // Get list of ingredients
-        mTask = new ServerCommsTask(TaskType.GET_PANTRY, app);
+        mTask = new ServerCommsTask<>(TaskType.GET_PANTRY, this, app);
         mTask.execute();
-
-        mHandler = new Handler();
-        mHandler.post(this);
     }
 
     @Override
-    public void run() {
-        while (mTask.pantry == null);
+    public void run(List<Ingredient> pantry) {
+        mIngredientList = pantry;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mIngredientList = mTask.pantry;
-                PantryItemAdapter pantryItemAdapter = new PantryItemAdapter(app, mTask.pantry, mViewPantryActivity);
+                PantryItemAdapter pantryItemAdapter = new PantryItemAdapter(app, mIngredientList, mViewPantryActivity);
                 ListView listView = (ListView) findViewById(R.id.list_pantry);
                 listView.setAdapter(pantryItemAdapter);
             }

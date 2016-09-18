@@ -150,30 +150,15 @@ def normalize_string(str)
 end
 
 def lookup_upc(upc)
-  url = URI("http://www.upcindex.com/"+upc)
+  key = "78a651159e2371cc2376d3f5588ec555"
+  url = URI("http://api.upcdatabase.org/json/#{key}/#{upc}")
 
-  http = Net::HTTP.new(url.host, url.port)
-  puts url
-
-  request = Net::HTTP::Get.new("http://www.upcindex.com/"+upc)
-  request["upgrade-insecure-requests"] = '1'
-  request["x-devtools-emulate-network-conditions-client-id"] = '7ce6663a-8da2-4b36-9e68-22ad32cebe36'
-  request["user-agent"] = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36'
-  request["accept"] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
-  request["accept-language"] = 'en-US,en;q=0.8'
-  request["cache-control"] = 'no-cache'
-
-  response = http.request(request)
-  html_string = response.body.force_encoding('UTF-8')
-  match = html_string.match(/<strong itemprop=\"name\">(.*)<\/strong>/)
-
-  if match.nil?
-    return "None"
+  response = Net::HTTP.get(url)
+  json = JSON.parse(response)
+  if json['valid'] == 'true'
+    return json['description']
   else
-    match = match[0]
-    match.gsub!(/<strong itemprop=\"name\">/, "")
-    match.gsub!(/<\/strong>/, "")
-    return match
+    return nil
   end
 end
 
@@ -209,14 +194,25 @@ end
 
 def flatten_ingredients(ingredients)
   added_ingredients = Set.new()
-  flattened_ingredients = ingredients.map {|i| $ingredients[i[:id]]}
+  to_visit = ingredients.map {|i| $ingredients[i[:id]]}
+  flattened_ingredients = Array.new(to_visit)
 
-  ingredients.each do |i|
+  visited_ingredients = Set.new()
+
+  to_visit.each do |i|
     parent = $ingredients[i[:parent]]
-    while parent do
-      flattened_ingredients.push(parent) unless added_ingredients.include?(parent)
-      added_ingredients.add(parent.id)
-      parent = $ingredients[parent[:parent]]
+    unless visited_ingredients.include?(parent[:id])
+      flattened_ingredients.push(parent)
+      visited_ingredients.add(parent[:id])
+      to_visit.push(parent)
+    end
+
+    i[:children].each do |child|
+      unless visited_ingredients.include?(child[:id])
+        flattened_ingredients.push(child)
+        visited_ingredients.add(child[:id])
+        to_visit.push(child)
+      end
     end
   end
 
@@ -239,6 +235,8 @@ def build_info
   ingredient_records.each do |i| 
     $ingredients[i.id] = {id: i.id, name: i.name}
     $ingredients[i.id][:parent] = i.parent.id if i.parent
+    $ingredients[i.parent.id][:children] ||  $ingredients[i.parent.id][:children] = []
+    $ingredients[i.parent.id][:children].push($ingredients[i.id])
     if i.name.include?('water') || i.name == 'salt' || i.name == 'pepper' || i.name == 'black pepepr'
       $common_ingredients.push({id: i.id, name: i.name})
     end
