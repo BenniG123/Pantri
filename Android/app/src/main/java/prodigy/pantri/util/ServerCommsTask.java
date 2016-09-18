@@ -71,7 +71,8 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                 pantry = getPantry(mApp);
                 break;
             case ADD_INGREDIENT:
-
+                ingredientID = getIngredientByName(mApp, mParam);
+                addIngredient(mApp, ingredientID);
                 break;
             case DEL_INGREDIENT:
                 break;
@@ -262,9 +263,14 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         int ret = -1;
         try {
             Response<ResponseBody> response = authResponse.execute();
-            String str = response.body().string();
-            JSONObject obj = new JSONObject(str);
-            ret = obj.getInt("id");
+            if (response.isSuccessful()) {
+                String str = response.body().string();
+                JSONObject obj = new JSONObject(str);
+                ret = obj.getInt("id");
+            }
+            else {
+                System.out.println(response.errorBody().string());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
