@@ -1,6 +1,8 @@
+# -*- encoding : utf-8 -*-
 require 'sinatra'
 require "sinatra/activerecord"
 require "sinatra/json"
+require "sinatra/reloader" if development?
 
 require "./model"
 require "./ingredient"
@@ -55,7 +57,7 @@ end
 
 put '/pantry/:id' do
   return 401 unless @user
-  ingredient = Ingredient.find_by_id(:id)
+  ingredient = Ingredient.find_by_id(params[:id])
   return 404 unless ingredient
   @user.ingredients.push(ingredient)
   @user.save
@@ -74,12 +76,12 @@ get '/recipe/' do
       thumbnail: r.thumbnail,
       image: r.image,
       cookTime: r.cook_time,
-      ingredients: r.ingredients.split('\0'),
-      steps: r.ingredients.split('\0')
+      ingredients: r.ingredient_text.split('\0'),
+      steps: r.steps.split('\0')
     }
   end
 
-  return json recipes: formatted_recipes
+  return json recipes: formatted_recipes.shuffle()
 end
 
 get '/ingredient/upc/:upc' do
