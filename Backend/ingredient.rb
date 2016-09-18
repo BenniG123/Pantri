@@ -147,8 +147,33 @@ def normalize_string(str)
 end
 
 def lookup_upc(upc)
+  url = URI("http://www.upcindex.com/"+upc)
 
+  http = Net::HTTP.new(url.host, url.port)
+  puts url
+
+  request = Net::HTTP::Get.new("http://www.upcindex.com/"+upc)
+  request["upgrade-insecure-requests"] = '1'
+  request["x-devtools-emulate-network-conditions-client-id"] = '7ce6663a-8da2-4b36-9e68-22ad32cebe36'
+  request["user-agent"] = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36'
+  request["accept"] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+  request["accept-language"] = 'en-US,en;q=0.8'
+  request["cache-control"] = 'no-cache'
+
+  response = http.request(request)
+  html_string = response.body.force_encoding('UTF-8')
+  match = html_string.match(/<strong itemprop=\"name\">(.*)<\/strong>/)
+
+  if match.nil?
+    return "None"
+  else
+    match = match[0]
+    match.gsub!(/<strong itemprop=\"name\">/, "")
+    match.gsub!(/<\/strong>/, "")
+    return match
+  end
 end
+
 
 def lookup_recipes(ingredients)
   combined_ingredients = ingredients.to_a.concat($common_ingredients)
