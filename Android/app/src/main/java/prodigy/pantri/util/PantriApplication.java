@@ -2,32 +2,11 @@ package prodigy.pantri.util;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import prodigy.pantri.AddFoodActivity;
-import prodigy.pantri.CookActivity;
-import prodigy.pantri.FoodSearchActivity;
-import prodigy.pantri.LoginActivity;
-import prodigy.pantri.MainActivity;
 import prodigy.pantri.R;
-import prodigy.pantri.RecipeActivity;
-import prodigy.pantri.SettingsActivity;
-import prodigy.pantri.ShoppingListActivity;
-import prodigy.pantri.ViewPantryActivity;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by Quinn on 9/16/2016.
