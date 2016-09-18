@@ -16,12 +16,10 @@ import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
 
-public class NewFoodActivity extends AppCompatActivity implements PantriCallback<Ingredient> {
+public class NewFoodActivity extends AppCompatActivity {
 
     int quantity = 1;
     private ServerCommsTask mTask;
-    private Handler mHandler;
-    private NewFoodActivity mNewFoodActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,6 @@ public class NewFoodActivity extends AppCompatActivity implements PantriCallback
             itemName.setText(i.getStringExtra("name"));
         }
 
-        mNewFoodActivity = this;
-
         Button b = (Button) findViewById(R.id.btn_submit);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +40,7 @@ public class NewFoodActivity extends AppCompatActivity implements PantriCallback
 
                 mTask = new ServerCommsTask<>(TaskType.ADD_INGREDIENT, null, (PantriApplication) getApplication(), nameString, quantity);
                 mTask.execute();
+                finish();
             }
         });
     }
@@ -59,17 +56,5 @@ public class NewFoodActivity extends AppCompatActivity implements PantriCallback
     public void addQuantity(View v) {
         quantity++;
         ((TextView) findViewById(R.id.quantity)).setText(String.valueOf(quantity));
-    }
-
-    public void submit(View v) {
-        String name = ((TextView) findViewById(R.id.item_name)).getText().toString();
-        String quantity = ((TextView) findViewById(R.id.quantity)).getText().toString();
-        mTask = new ServerCommsTask<>(TaskType.ADD_INGREDIENT, this, (PantriApplication) getApplication(), name, Integer.parseInt(quantity));
-        mTask.execute();
-    }
-
-    @Override
-    public void run(Ingredient arg) {
-        finish();
     }
 }
