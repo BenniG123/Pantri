@@ -36,7 +36,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
     private String mParam;
     public List<Ingredient> pantry = null;
     public List<Recipe> recipes = null;
-    public int ingredientID;
+    public Ingredient ingredient;
     public boolean opDone;
 
     public ServerCommsTask(TaskType task, PantriApplication app) {
@@ -45,7 +45,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         pantry = null;
         opDone = false;
         recipes = null;
-        ingredientID = -1;
+        ingredient = null;
     }
 
     public ServerCommsTask(TaskType task, PantriApplication app, String param) {
@@ -55,7 +55,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         pantry = null;
         opDone = false;
         recipes = null;
-        ingredientID = -1;
+        ingredient = null;
     }
 
     @Override
@@ -75,9 +75,10 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
             case DEL_INGREDIENT:
                 break;
             case GET_INGREDIENT_UPC:
+                ingredient = getIngredientByUPC(mApp, mParam);
                 break;
             case GET_INGREDIENT_NAME:
-                ingredientID = getIngredientByName(mApp, mParam);
+                ingredient = getIngredientByName(mApp, mParam);
                 break;
             case LIST_RECIPES:
                 recipes = getRecipes(mApp);
@@ -147,10 +148,12 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         boolean loginSuccess = false;
 
         try {
-            Response<ResponseBody> authResponse = service.getSession(email).execute();
-            JSONObject jsonObject = new JSONObject(authResponse.body().string());
-            token = jsonObject.getString("token");
-            loginSuccess = true;
+            Response<ResponseBody> response = service.getSession(email).execute();
+            if (response.isSuccessful()) {
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                token = jsonObject.getString("token");
+                loginSuccess = true;
+            }
         } catch (IOException e) {
             loginSuccess = false;
             token = null;
@@ -184,9 +187,9 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
 
         PantriService service = retrofit.create(PantriService.class);
 
-        Call<ResponseBody> authResponse = service.deleteSession("Token " + app.getAuthToken());
+        Call<ResponseBody> response = service.deleteSession("Token " + app.getAuthToken());
         try {
-            authResponse.execute();
+            response.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -235,7 +238,35 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         return pantryList;
     }
 
-    private int getIngredientByName(PantriApplication app, String name) {
+    private Ingredient getIngredientByUPC(PantriApplication app, String upc) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.getIngredientUPC("Token " + app.getAuthToken(), upc);
+        Ingredient ret = null;
+        try {
+            Response<ResponseBody> response = authResponse.execute();
+            if (response.isSuccessful()) {
+                ret = new Ingredient();
+                String str = response.body().string();
+                JSONObject obj = new JSONObject(str);
+                JSONObject tmp = obj.getJSONObject("ingredient");
+                ret.id = tmp.getInt("id");
+                ret.name = tmp.getString("name");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    private Ingredient getIngredientByName(PantriApplication app, String name) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(app.getString(R.string.rest_url))
                 .build();
@@ -243,12 +274,17 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         PantriService service = retrofit.create(PantriService.class);
 
         Call<ResponseBody> authResponse = service.getIngredientName("Token " + app.getAuthToken(), name);
-        int ret = -1;
+        Ingredient ret = null;
         try {
             Response<ResponseBody> response = authResponse.execute();
-            String str = response.body().string();
-            JSONObject obj = new JSONObject(str);
-            ret = obj.getInt("id");
+            if (response.isSuccessful()) {
+                ret = new Ingredient();
+                String str = response.body().string();
+                JSONObject obj = new JSONObject(str);
+                JSONObject tmp = obj.getJSONObject("ingredient");
+                ret.id = tmp.getInt("id");
+                ret.name = tmp.getString("name");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
