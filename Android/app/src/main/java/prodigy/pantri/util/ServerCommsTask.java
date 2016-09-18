@@ -96,8 +96,8 @@ public class ServerCommsTask<T> extends AsyncTask<Object, Void, Object> {
                 }
                 else {
                     addIngredient(mApp, ingredient.id);
-                    mCallbackArg = (T) ingredient;
                 }
+                mCallbackArg = (T) ingredient;
                 break;
             case DEL_INGREDIENT:
                 deleteIngredient(mApp, mID);
