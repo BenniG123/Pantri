@@ -34,15 +34,15 @@ public interface PantriService {
     Call<ResponseBody> listRecipes(@Header("Authorization") String authorization);
 
     @DELETE("pantry/{id}")
-    Call<String> deleteIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
+    Call<ResponseBody> deleteIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
 
     @PUT("pantry/{id}")
     Call<ResponseBody> addIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
 
     @GET("ingredient/upc")
-    Call<String> getIngredientUPC(@Header("Authorization") String authorization, @Query("upc") String upc);
+    Call<ResponseBody> getIngredientUPC(@Header("Authorization") String authorization, @Query("upc") String upc);
 
     @GET("ingredient/name")
-    Call<String> getIngredientName(@Header("Authorization") String authorization, @Query("name") String name);
+    Call<ResponseBody> getIngredientName(@Header("Authorization") String authorization, @Query("name") String name);
 
 }
