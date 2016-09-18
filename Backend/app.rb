@@ -79,7 +79,7 @@ get '/recipe/' do
     }
   end
 
-  return json recipes: formatted_recipes
+  return json recipes: formatted_recipes.shuffle()
 end
 
 get '/ingredient/upc/:upc' do

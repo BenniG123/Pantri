@@ -157,7 +157,7 @@ def lookup_recipes(ingredients)
     sorted_subset?(flattened_ingredients, $recipe_id_ingredients[id])
   end
 
-  return Recipe.find(possible_recipes.first(50))
+  return Recipe.find(possible_recipes.shuffle().first(50))
 end
 
 def sorted_subset?(set, subset)
