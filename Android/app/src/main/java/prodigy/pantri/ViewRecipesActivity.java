@@ -39,9 +39,21 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_view_recipes);
         setTitle("View Recipes");
+        refresh();
+    }
+
+    public void refresh() {
         mTask = new ServerCommsTask<>(TaskType.LIST_RECIPES, this, (PantriApplication) getApplication());
         mGrid = (GridView) findViewById(R.id.recipe_grid);
         mTask.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mRecipeList == null || mRecipeList.size() == 0) {
+            refresh();
+        }
     }
 
     @Override

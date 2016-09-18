@@ -3,6 +3,7 @@ package prodigy.pantri;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -209,6 +210,9 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
                 showProgress(false);
 
                 if (((PantriApplication) getApplication()).getAuthToken() != null) {
+                    if (getParent() != null) {
+                        ((ViewRecipesActivity) getParent()).refresh();
+                    }
                     finish();
                 } else {
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
