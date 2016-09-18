@@ -1,6 +1,7 @@
 package prodigy.pantri;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,9 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class NewFoodActivity extends AppCompatActivity {
+import prodigy.pantri.util.PantriApplication;
+import prodigy.pantri.util.ServerCommsTask;
+import prodigy.pantri.util.TaskType;
 
-    int quantity = 0;
+public class NewFoodActivity extends AppCompatActivity implements Runnable {
+
+    int quantity = 1;
+    private ServerCommsTask mTask;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +46,18 @@ public class NewFoodActivity extends AppCompatActivity {
 
     public void submit(View v) {
         // TODO - REST Call to add ingredient to server
+        // Get recipes (AsyncTask?)
+        mTask = new ServerCommsTask(TaskType.ADD_INGREDIENT, (PantriApplication) getApplication(), ((TextView) findViewById(R.id.item_name)).getText().toString());
+        mTask.execute();
 
+        mHandler = new Handler();
+        mHandler.post(this);
         // Only let them add something that is in the master ingredient array
 
+    }
+
+    @Override
+    public void run() {
         finish();
     }
 }

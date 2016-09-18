@@ -71,6 +71,8 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                 pantry = getPantry(mApp);
                 break;
             case ADD_INGREDIENT:
+                ingredient = getIngredientByName(mApp, mParam);
+                addIngredient(mApp, ingredient.id);
                 break;
             case DEL_INGREDIENT:
                 break;
@@ -136,6 +138,21 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
 
     protected void onPostExecute(Object result) {
 
+    }
+
+    private void addIngredient(PantriApplication app, int id) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.addIngredient("Token " + app.getAuthToken(), id);
+        try {
+            authResponse.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void login(PantriApplication app, String email) {
@@ -284,6 +301,9 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                 JSONObject tmp = obj.getJSONObject("ingredient");
                 ret.id = tmp.getInt("id");
                 ret.name = tmp.getString("name");
+            }
+            else {
+                System.out.println(response.errorBody().string());
             }
         } catch (IOException e) {
             e.printStackTrace();
