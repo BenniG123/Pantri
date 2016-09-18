@@ -1,4 +1,7 @@
-require 'set'
+# -*- encoding : utf-8 -*-
+require 'uri'
+require 'net/http'
+
 BIWORD_FACTOR = 5
 
 def max_rank(ingredient_id)
@@ -262,7 +265,7 @@ def build_term_vector(ingredients)
       term_counts[id] || term_counts[id] = 0
       term_counts[id] += 1
       $term_postings[id] || $term_postings[id]= []
-      $term_postings[id].push(ingredient[:id])
+      $term_postings[id].push(ingredient.id)
       total_counted += 1
     end
   end

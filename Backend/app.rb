@@ -1,6 +1,8 @@
+# -*- encoding : utf-8 -*-
 require 'sinatra'
 require "sinatra/activerecord"
 require "sinatra/json"
+require "sinatra/reloader" if development?
 
 require "./model"
 require "./ingredient"
