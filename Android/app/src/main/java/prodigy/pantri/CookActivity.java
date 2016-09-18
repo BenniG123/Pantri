@@ -20,7 +20,6 @@ import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
 
 public class CookActivity extends PantriBaseActivity implements Runnable {
-    private Recipe[] recipes;
     private ListView listView;
     private RecipeListAdapter listAdapter;
     private ServerCommsTask mTask;
@@ -43,16 +42,14 @@ public class CookActivity extends PantriBaseActivity implements Runnable {
     @Override
     public void run() {
         while (mTask.recipes == null);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final Recipe[] recipes;
-
                 if (mTask.recipes.size() > 0) {
-                    recipes = (Recipe[]) mTask.recipes.toArray();
 
                     // Set up list view
-                    listAdapter = new RecipeListAdapter(getApplicationContext(), recipes);
+                    listAdapter = new RecipeListAdapter(getApplicationContext(), mTask.recipes);
                     listView = (ListView) findViewById(R.id.list_view);
                     listView.setAdapter(listAdapter);
 
@@ -60,7 +57,7 @@ public class CookActivity extends PantriBaseActivity implements Runnable {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Intent intent = new Intent(getApplicationContext(), RecipeActivity.class);
-                            intent.putExtra("recipe", recipes[position]);
+                            intent.putExtra("recipe", mTask.recipes.get(position));
                             startActivity(intent);
                         }
                     });

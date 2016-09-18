@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.List;
+
 import prodigy.pantri.R;
 
 /**
@@ -13,15 +15,15 @@ import prodigy.pantri.R;
  */
 public class RecipeListAdapter extends BaseAdapter {
     private Context mContext;
-    private Recipe[] mRecipes;
+    private List<Recipe> mRecipes;
 
-    public RecipeListAdapter(Context c, Recipe[] recipes) {
+    public RecipeListAdapter(Context c, List<Recipe> recipes) {
         mContext = c;
         mRecipes = recipes;
     }
 
     public int getCount() {
-        return mRecipes.length;
+        return mRecipes.size();
     }
 
     public Object getItem(int position) {
@@ -34,6 +36,6 @@ public class RecipeListAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-        return new RecipeView(mContext, mRecipes[position]);
+        return new RecipeView(mContext, mRecipes.get(position));
     }
 }

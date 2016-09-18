@@ -39,10 +39,10 @@ public interface PantriService {
     @PUT("pantry/{id}")
     Call<ResponseBody> addIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
 
-    @GET("ingredient/upc")
-    Call<ResponseBody> getIngredientUPC(@Header("Authorization") String authorization, @Query("upc") String upc);
+    @GET("ingredient/upc/{upc}")
+    Call<ResponseBody> getIngredientUPC(@Header("Authorization") String authorization, @Path("upc") String upc);
 
-    @GET("ingredient/name")
-    Call<ResponseBody> getIngredientName(@Header("Authorization") String authorization, @Query("name") String name);
+    @GET("ingredient/name/{name}")
+    Call<ResponseBody> getIngredientName(@Header("Authorization") String authorization, @Path("name") String name);
 
 }
