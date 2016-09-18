@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import okhttp3.ResponseBody;
 import prodigy.pantri.R;
@@ -30,15 +31,13 @@ import retrofit2.Retrofit;
 /**
  * Created by Quinn on 9/17/2016.
  */
-public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
+public class ServerCommsTask<T> extends AsyncTask<Void, Void, Object> {
     private PantriApplication mApp;
     private TaskType mTask;
     private String mParam;
     private int mID;
-    private Runnable mCallback;
-    public List<Ingredient> pantry = null;
-    public List<Recipe> recipes = null;
-    public Ingredient ingredient;
+    private PantriCallback<T> mCallback;
+    private T mCallbackArg;
     public boolean opDone;
 
     public ServerCommsTask(TaskType task, PantriApplication app) {
@@ -49,15 +48,13 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         this(task, app, param, null);
     }
 
-    public ServerCommsTask(TaskType task, PantriApplication app, String param, Runnable callback) {
+    public ServerCommsTask(TaskType task, PantriApplication app, String param, PantriCallback<T> callback) {
         mApp = app;
         mTask = task;
         mParam = param;
-        pantry = null;
         opDone = false;
-        recipes = null;
-        ingredient = null;
         mCallback = callback;
+        mCallbackArg = null;
     }
 
     public ServerCommsTask(TaskType task, PantriApplication app, int id) {
@@ -65,10 +62,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         mTask = task;
         mParam = null;
         mID = id;
-        pantry = null;
         opDone = false;
-        recipes = null;
-        ingredient = null;
     }
 
     @Override
@@ -81,28 +75,30 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                 logout(mApp);
                 break;
             case GET_PANTRY:
-                pantry = getPantry(mApp);
+                mCallbackArg = (T) getPantry(mApp);
                 break;
             case ADD_INGREDIENT:
-                ingredient = getIngredientByName(mApp, mParam);
-                addIngredient(mApp, ingredient.id);
+                Ingredient tmp = getIngredientByName(mApp, mParam);
+                mCallbackArg = (T) tmp;
+                addIngredient(mApp, tmp.id);
                 break;
             case DEL_INGREDIENT:
                 deleteIngredient(mApp, mID);
                 break;
             case GET_INGREDIENT_UPC:
-                ingredient = getIngredientByUPC(mApp, mParam);
+                mCallbackArg = (T) getIngredientByUPC(mApp, mParam);
                 break;
             case GET_INGREDIENT_NAME:
-                ingredient = getIngredientByName(mApp, mParam);
+                mCallbackArg = (T) getIngredientByName(mApp, mParam);
                 break;
             case LIST_RECIPES:
-                recipes = getRecipes(mApp);
+                mCallbackArg = (T) getRecipes(mApp);
                 break;
         }
         opDone = true;
+
         if (mCallback != null) {
-            mCallback.run();
+            mCallback.run(mCallbackArg);
         }
         return true;
     }
