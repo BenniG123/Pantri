@@ -30,6 +30,7 @@ import java.io.IOException;
 import okhttp3.ResponseBody;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriService;
+import prodigy.pantri.util.ServerComms;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -125,30 +126,7 @@ public class PantriBaseActivity extends AppCompatActivity
             ret = new Intent(context, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(this.getString(R.string.rest_url))
-                    .build();
-
-            PantriService service = retrofit.create(PantriService.class);
-
-            Call<ResponseBody> authResponse = service.deleteSession("Token " + app.getAuthToken());
-            authResponse.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-                        System.out.println(response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
-
-            app.setAuthToken(null);
+            ServerComms.logout(app);
             ret = new Intent(context, LoginActivity.class);
         }
 

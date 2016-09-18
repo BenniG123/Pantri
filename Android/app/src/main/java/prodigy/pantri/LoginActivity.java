@@ -42,7 +42,9 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriService;
+import prodigy.pantri.util.ServerComms;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -214,47 +216,7 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             // Attempt authentication against a network service.
             boolean loginSuccess = true;
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(getString(R.string.rest_url))
-                    .build();
-
-            PantriService service = retrofit.create(PantriService.class);
-            String token = "";
-
-            try {
-                Response<ResponseBody> authResponse = service.getSession(mEmail).execute();
-                JSONObject jsonObject = new JSONObject(authResponse.body().string());
-                token = jsonObject.getString("token");
-
-            } catch (IOException e) {
-                loginSuccess = false;
-                token = null;
-                e.printStackTrace();
-            } catch (JSONException e) {
-                loginSuccess = false;
-                token = null;
-                e.printStackTrace();
-            }
-
-            // Update auth token
-            SharedPreferences privateData = getSharedPreferences("private_data", MODE_PRIVATE);
-            SharedPreferences.Editor edit = privateData.edit();
-            edit.putString("auth", token);
-            edit.apply();
-
-            if (loginSuccess) {
-                // Update email and password
-                edit = mDefaultSharedPrefs.edit();
-                edit.putString("pref_name", "John Smith");
-                edit.putString("pref_email", mEmail);
-                edit.putString("pref_password", mPassword);
-                edit.apply();
-
-                return true;
-            }
-
-            return false;
+            return ServerComms.login((PantriApplication) getApplication(), mDefaultSharedPrefs, mEmail, mPassword);
         }
 
         @Override
