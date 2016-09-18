@@ -36,10 +36,11 @@ end
 
 get '/pantry' do
   return 401 unless @user
-  formatted_ingredients = @user.ingredients.map do |i|
+  formatted_ingredients = @user.amounts.map do |i|
     {
-      id: i.id,
-      name: i.name
+      id: i.ingredient.id,
+      name: i.ingredient.name,
+      quantity: i.quantity
     }
   end
 
@@ -48,9 +49,25 @@ end
 
 delete '/pantry/:id' do
   return 401 unless @user
-  ingredient = @user.ingredients.find_by_id(params[:id]);
+  ingredient = Ingredient.find_by_id(params[:id])
+  quantity = params[:quantity]
   return 404 unless ingredient
-  ingredient.destroy
+
+  new_quantity = 0
+  if quantity && @user.ingredients.exists?(ingredient.id)
+    amount = @user.amounts.where(ingredient_id: ingredient.id)[0]
+    new_quantity = amount.quantity -= Integer(quantity)
+    @user.ingredients.delete(ingredient)
+  else
+    amount = @user.amounts.where(ingredient_id: ingredient.id)[0]
+    @user.ingredients.delete(ingredient)
+  end
+
+  if quantity && new_quantity > 0
+    @user.amounts << Amount.new({ ingredient_id: ingredient.id, quantity: new_quantity })
+  end
+
+  @user.save
 
   return json status: "Success"
 end
@@ -58,8 +75,18 @@ end
 put '/pantry/:id' do
   return 401 unless @user
   ingredient = Ingredient.find_by_id(params[:id])
+  quantity = params[:quantity] || 1
   return 404 unless ingredient
-  @user.ingredients.push(ingredient)
+
+  if @user.ingredients.exists?(ingredient.id)
+    puts "Found it"
+    amount = @user.amounts.where(ingredient_id: ingredient.id)[0]
+    quantity = amount.quantity += Integer(quantity)
+    @user.ingredients.delete(ingredient)
+  end
+
+  @user.amounts << Amount.new({ ingredient_id: ingredient.id, quantity: quantity })
+
   @user.save
 
   return json status: "Success"
