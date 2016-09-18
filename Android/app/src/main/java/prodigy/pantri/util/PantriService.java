@@ -2,6 +2,7 @@ package prodigy.pantri.util;
 
 import java.util.List;
 
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -20,7 +21,7 @@ import retrofit2.http.Query;
 public interface PantriService {
 
     @GET("pantry")
-    Call<List<String>> listPantry(@Header("Authorization") String authorization);
+    Call<ResponseBody> listPantry(@Header("Authorization") String authorization);
 
     @FormUrlEncoded
     @POST("session")
@@ -36,7 +37,7 @@ public interface PantriService {
     Call<String> deleteIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
 
     @PUT("pantry/{id}")
-    Call<String> addIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
+    Call<ResponseBody> addIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);
 
     @GET("ingredient/upc")
     Call<String> getIngredientUPC(@Header("Authorization") String authorization, @Query("upc") String upc);

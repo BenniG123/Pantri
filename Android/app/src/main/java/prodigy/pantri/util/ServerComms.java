@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import prodigy.pantri.R;
@@ -88,5 +89,31 @@ public class ServerComms {
         });
 
         app.setAuthToken(null);
+    }
+
+    public static List<Ingredient> getPantry(PantriApplication app) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.listPantry("Token " + app.getAuthToken());
+        authResponse.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    System.out.println(response.body().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
     }
 }
