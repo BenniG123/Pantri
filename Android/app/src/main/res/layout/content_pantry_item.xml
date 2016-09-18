@@ -11,8 +11,9 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/ingredient_name"
             android:layout_alignParentLeft="true"/>
 
