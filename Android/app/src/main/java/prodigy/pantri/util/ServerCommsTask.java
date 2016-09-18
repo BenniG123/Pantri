@@ -91,11 +91,12 @@ public class ServerCommsTask<T> extends AsyncTask<Object, Void, Object> {
                 break;
             case ADD_INGREDIENT:
                 Ingredient ingredient = getIngredientByName(mApp, mParam);
-                if (mQuantity > 1) {
-                    addIngredient(mApp, ingredient.id, mQuantity);
-                }
-                else {
-                    addIngredient(mApp, ingredient.id);
+                if (ingredient != null) {
+                    if (mQuantity > 1) {
+                        addIngredient(mApp, ingredient.id, mQuantity);
+                    } else {
+                        addIngredient(mApp, ingredient.id);
+                    }
                 }
                 mCallbackArg = (T) ingredient;
                 break;

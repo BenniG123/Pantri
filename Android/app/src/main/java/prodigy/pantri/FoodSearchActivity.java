@@ -56,7 +56,7 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
     public boolean onQueryTextChange(String s) {
         if (s.length() > 1 && s.charAt(s.length() - 1) == ' ' && s.substring(0, s.length() - 1).matches("^[0-9]+$")) {
             // If match found for UPC, add it and let the user know
-            ServerCommsTask task = new ServerCommsTask<>(TaskType.GET_INGREDIENT_UPC, this, app, "0" + s.substring(0, s.length()-1));
+            ServerCommsTask task = new ServerCommsTask<>(TaskType.GET_INGREDIENT_UPC, this, app, s.substring(0, s.length()-1));
             task.execute();
             searchView.setQuery("", false);
         }
@@ -93,9 +93,16 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
 
     @Override
     public void run(Ingredient arg) {
+        final Ingredient tmp = arg;
         if (arg != null) { // Match
             ServerCommsTask task = new ServerCommsTask<>(TaskType.INC_INGREDIENT, null, app, arg.id, 1);
             task.execute();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Successfully added " + tmp.name + "!", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         else {
             Intent i = new Intent(this, NewFoodActivity.class);

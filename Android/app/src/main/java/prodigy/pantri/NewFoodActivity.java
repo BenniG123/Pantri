@@ -79,7 +79,12 @@ public class NewFoodActivity extends AppCompatActivity implements PantriCallback
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "Successfully added " + mIngred.name + "!", Toast.LENGTH_SHORT).show();
+                if (mIngred == null) {
+                    Toast.makeText(getApplicationContext(), "Could not add that ingredient.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Successfully added " + mIngred.name + "!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         finish();
