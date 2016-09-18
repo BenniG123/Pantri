@@ -31,7 +31,7 @@ public interface PantriService {
     Call<ResponseBody> deleteSession(@Header("Authorization") String authorization);
 
     @GET("recipe/")
-    Call<List<Recipe>> listRecipes(@Header("Authorization") String authorization);
+    Call<ResponseBody> listRecipes(@Header("Authorization") String authorization);
 
     @DELETE("pantry/{id}")
     Call<String> deleteIngredient(@Header("Authorization") String authorization, @Path("id") int ingredientID);

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -34,6 +35,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
     private TaskType mTask;
     private String mParam;
     public List<Ingredient> pantry = null;
+    public List<Recipe> recipes = null;
     public boolean opDone;
 
     public ServerCommsTask(TaskType task, PantriApplication app) {
@@ -41,6 +43,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         mTask = task;
         pantry = null;
         opDone = false;
+        recipes = null;
     }
 
     public ServerCommsTask(TaskType task, PantriApplication app, String param) {
@@ -49,6 +52,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         mParam = param;
         pantry = null;
         opDone = false;
+        recipes = null;
     }
 
     @Override
@@ -72,11 +76,57 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
             case GET_INGREDIENT_NAME:
                 break;
             case LIST_RECIPES:
+                recipes = getRecipes(mApp);
                 break;
         }
         opDone = true;
 
         return true;
+    }
+
+    private List<Recipe> getRecipes(PantriApplication app) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.listRecipes("Token " + app.getAuthToken());
+        List<Recipe> recipeList = new ArrayList<Recipe>();;
+
+        try {
+            Response<ResponseBody> response = authResponse.execute();
+            if (response.isSuccessful()) {
+                String str = response.body().string();
+                JSONObject obj = new JSONObject(str);
+                JSONArray arr = obj.getJSONArray("recipes");
+
+                for (int i = 0; i < arr.length(); i++) {
+                    Recipe tmp = new Recipe();
+                    JSONObject recipe = (JSONObject) arr.get(0);
+
+                    // public List<String> ingredients;
+                    // public List<String> steps;
+
+                    tmp.id = recipe.getInt("id");
+                    tmp.name = recipe.getString("name");
+                    tmp.thumbnail = recipe.getString("thumbnail");
+                    tmp.image = recipe.getString("image");
+
+                    recipeList.add(tmp);
+                }
+            }
+            else {
+                int responseCode = response.raw().code();
+                System.out.println("Error - Code " + responseCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return recipeList;
     }
 
     protected void onPostExecute(Object result) {
