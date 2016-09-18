@@ -47,7 +47,7 @@ public class ShoppingListActivity extends PantriBaseActivity {
         ingredientList.add(i2);
         ingredientList.add(i3);
 
-        PantryItemAdapter pantryItemAdapter = new PantryItemAdapter(this, ingredientList);
+        PantryItemAdapter pantryItemAdapter = new PantryItemAdapter(this, ingredientList, null);
         ListView listView = (ListView) findViewById(R.id.shopping_list);
         listView.setAdapter(pantryItemAdapter);
     }

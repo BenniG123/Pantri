@@ -30,8 +30,11 @@ public class CookActivity extends PantriBaseActivity implements Runnable {
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_cook);
         setTitle("Cook");
+    }
 
-        // Get recipes (AsyncTask?)
+    @Override
+    protected void onResume() {
+        super.onResume();
         mTask = new ServerCommsTask(TaskType.LIST_RECIPES, (PantriApplication) getApplication());
         mTask.execute();
 

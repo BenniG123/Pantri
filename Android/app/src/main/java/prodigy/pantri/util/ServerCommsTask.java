@@ -34,6 +34,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
     private PantriApplication mApp;
     private TaskType mTask;
     private String mParam;
+    private int mID;
     public List<Ingredient> pantry = null;
     public List<Recipe> recipes = null;
     public Ingredient ingredient;
@@ -58,6 +59,17 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         ingredient = null;
     }
 
+    public ServerCommsTask(TaskType task, PantriApplication app, int id) {
+        mApp = app;
+        mTask = task;
+        mParam = null;
+        mID = id;
+        pantry = null;
+        opDone = false;
+        recipes = null;
+        ingredient = null;
+    }
+
     @Override
     protected Boolean doInBackground(Void... voids) {
         switch (mTask) {
@@ -75,6 +87,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
                 addIngredient(mApp, ingredient.id);
                 break;
             case DEL_INGREDIENT:
+                deleteIngredient(mApp, mID);
                 break;
             case GET_INGREDIENT_UPC:
                 ingredient = getIngredientByUPC(mApp, mParam);
@@ -159,6 +172,21 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         PantriService service = retrofit.create(PantriService.class);
 
         Call<ResponseBody> authResponse = service.addIngredient("Token " + app.getAuthToken(), id);
+        try {
+            authResponse.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteIngredient(PantriApplication app, int id) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.deleteIngredient("Token " + app.getAuthToken(), id);
         try {
             authResponse.execute();
         } catch (IOException e) {
