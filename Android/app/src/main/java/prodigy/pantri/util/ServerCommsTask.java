@@ -220,5 +220,28 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
 
         return pantryList;
     }
+
+    private int getIngredientByName(PantriApplication app) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(app.getString(R.string.rest_url))
+                .build();
+
+        PantriService service = retrofit.create(PantriService.class);
+
+        Call<ResponseBody> authResponse = service.getIngredientName("Token " + app.getAuthToken(), mParam);
+        int ret = -1;
+        try {
+            Response<ResponseBody> response = authResponse.execute();
+            String str = response.body().string();
+            JSONObject obj = new JSONObject(str);
+            ret = obj.getInt("id");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
 }
 
