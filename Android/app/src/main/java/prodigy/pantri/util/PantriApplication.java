@@ -10,6 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import prodigy.pantri.AddFoodActivity;
 import prodigy.pantri.CookActivity;
 import prodigy.pantri.FoodSearchActivity;
@@ -20,6 +26,8 @@ import prodigy.pantri.RecipeActivity;
 import prodigy.pantri.SettingsActivity;
 import prodigy.pantri.ShoppingListActivity;
 import prodigy.pantri.ViewPantryActivity;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by Quinn on 9/16/2016.
@@ -35,35 +43,6 @@ public class PantriApplication extends Application {
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString("auth", authToken);
         edit.apply();
-    }
-
-    public static Intent handleNavDrawer(Activity activity, MenuItem item) {
-
-        Intent ret = null;
-        int id = item.getItemId();
-        Context context = activity.getApplicationContext();
-
-        if (id == R.id.nav_home && !(activity instanceof MainActivity)) {
-            ret = new Intent(context, MainActivity.class);
-        } else if (id == R.id.nav_add_food && !(activity instanceof FoodSearchActivity)) {
-            ret = new Intent(context, FoodSearchActivity.class);
-        } else if (id == R.id.nav_view_pantry && !(activity instanceof ViewPantryActivity)) {
-            ret = new Intent(context, ViewPantryActivity.class);
-        } else if (id == R.id.nav_cook && !(activity instanceof CookActivity)) {
-            ret = new Intent(context, CookActivity.class);
-        } else if (id == R.id.nav_shopping_list && !(activity instanceof ShoppingListActivity)) {
-            ret = new Intent(context, ShoppingListActivity.class);
-        } else if (id == R.id.nav_settings && !(activity instanceof SettingsActivity)) {
-            ret = new Intent(context, SettingsActivity.class);
-        } else if (id == R.id.nav_logout) {
-            ((PantriApplication) activity.getApplication()).setAuthToken(null);
-            ret = new Intent(context, LoginActivity.class);
-        }
-        if (ret != null) {
-            ret.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        }
-
-        return ret;
     }
 
     public static void replaceLayout(Activity a, int resource) {

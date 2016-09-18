@@ -213,9 +213,8 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             // Attempt authentication against a network service.
-            boolean loginSuccess = true; // TODO Make false
+            boolean loginSuccess = true;
 
-            // TODO Try to log in
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(getString(R.string.rest_url))
                     .build();

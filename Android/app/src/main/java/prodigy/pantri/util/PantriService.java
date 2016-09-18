@@ -26,6 +26,9 @@ public interface PantriService {
     @POST("session")
     Call<ResponseBody> getSession(@Field("email") String email);
 
+    @DELETE("session")
+    Call<ResponseBody> deleteSession(@Header("Authorization") String authorization);
+
     @GET("recipe/")
     Call<List<Recipe>> listRecipes(@Header("Authorization") String authorization);
 

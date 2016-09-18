@@ -1,12 +1,15 @@
 package prodigy.pantri;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.util.SortedList;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,10 +21,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.io.Console;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.Console;
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class PantriBaseActivity extends AppCompatActivity
@@ -96,11 +107,57 @@ public class PantriBaseActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Intent ret = null;
+        int id = item.getItemId();
+        Context context = getApplicationContext();
 
-        Intent intent = PantriApplication.handleNavDrawer(this, item);
+        if (id == R.id.nav_home && !(this instanceof MainActivity)) {
+            ret = new Intent(context, MainActivity.class);
+        } else if (id == R.id.nav_add_food && !(this instanceof FoodSearchActivity)) {
+            ret = new Intent(context, FoodSearchActivity.class);
+        } else if (id == R.id.nav_view_pantry && !(this instanceof ViewPantryActivity)) {
+            ret = new Intent(context, ViewPantryActivity.class);
+        } else if (id == R.id.nav_cook && !(this instanceof CookActivity)) {
+            ret = new Intent(context, CookActivity.class);
+        } else if (id == R.id.nav_shopping_list && !(this instanceof ShoppingListActivity)) {
+            ret = new Intent(context, ShoppingListActivity.class);
+        } else if (id == R.id.nav_settings) {
+            ret = new Intent(context, SettingsActivity.class);
+        } else if (id == R.id.nav_logout) {
 
-        if (intent != null) {
-            startActivity(intent);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(this.getString(R.string.rest_url))
+                    .build();
+
+            PantriService service = retrofit.create(PantriService.class);
+
+            Call<ResponseBody> authResponse = service.deleteSession("Token " + app.getAuthToken());
+            authResponse.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+                        System.out.println(response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+
+            app.setAuthToken(null);
+            ret = new Intent(context, LoginActivity.class);
+        }
+
+        if (ret != null) {
+            ret.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
+
+        if (ret != null) {
+            startActivity(ret);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
