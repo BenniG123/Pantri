@@ -30,7 +30,8 @@ import java.io.IOException;
 import okhttp3.ResponseBody;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriService;
-import prodigy.pantri.util.ServerComms;
+import prodigy.pantri.util.ServerCommsTask;
+import prodigy.pantri.util.TaskType;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -125,8 +126,8 @@ public class PantriBaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             ret = new Intent(context, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-
-            ServerComms.logout(app);
+            ServerCommsTask task = new ServerCommsTask(TaskType.LOGOUT, app);
+            task.execute();
             ret = new Intent(context, LoginActivity.class);
         }
 

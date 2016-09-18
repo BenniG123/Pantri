@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -44,7 +45,8 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriService;
-import prodigy.pantri.util.ServerComms;
+import prodigy.pantri.util.ServerCommsTask;
+import prodigy.pantri.util.TaskType;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -54,11 +56,12 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Runnable {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private ServerCommsTask mAuthTask = null;
+    private Handler mHandler;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -146,8 +149,11 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(PreferenceManager.getDefaultSharedPreferences(this), email, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask = new ServerCommsTask(TaskType.LOGIN, (PantriApplication) getApplication(), email);
+            mAuthTask.execute();
+
+            mHandler = new Handler();
+            mHandler.post(this);
         }
     }
 
@@ -197,45 +203,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        private final String mEmail;
-        private final String mPassword;
-        private SharedPreferences mDefaultSharedPrefs;
+    @Override
+    public void run() {
+        while (!mAuthTask.opDone);
 
-        UserLoginTask(SharedPreferences defaultSharedPrefs, String email, String password) {
-            mEmail = email;
-            mPassword = password;
-            mDefaultSharedPrefs = defaultSharedPrefs;
-        }
+        mAuthTask = null;
+        showProgress(false);
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // Attempt authentication against a network service.
-            boolean loginSuccess = true;
-            return ServerComms.login((PantriApplication) getApplication(), mDefaultSharedPrefs, mEmail, mPassword);
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+        if (((PantriApplication) getApplication()).getAuthToken() != null) {
+            finish();
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
         }
     }
 }
