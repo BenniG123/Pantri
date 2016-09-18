@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new ServerCommsTask(TaskType.LOGIN, (PantriApplication) getApplication(), email);
+            mAuthTask = new ServerCommsTask<>(TaskType.LOGIN, this, (PantriApplication) getApplication(), email);
             mAuthTask.execute();
         }
     }
@@ -202,17 +202,20 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
 
     @Override
     public void run(Void v) {
-        while (!mAuthTask.opDone);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAuthTask = null;
+                showProgress(false);
 
-        mAuthTask = null;
-        showProgress(false);
-
-        if (((PantriApplication) getApplication()).getAuthToken() != null) {
-            finish();
-        } else {
-            mPasswordView.setError(getString(R.string.error_incorrect_password));
-            mPasswordView.requestFocus();
-        }
+                if (((PantriApplication) getApplication()).getAuthToken() != null) {
+                    finish();
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
+            }
+        });
     }
 }
 

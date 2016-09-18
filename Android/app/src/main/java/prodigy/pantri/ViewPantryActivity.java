@@ -36,7 +36,7 @@ public class ViewPantryActivity extends PantriBaseActivity implements PantriCall
 
     public void refresh() {
         // Get list of ingredients
-        mTask = new ServerCommsTask(TaskType.GET_PANTRY, app);
+        mTask = new ServerCommsTask<>(TaskType.GET_PANTRY, this, app);
         mTask.execute();
     }
 

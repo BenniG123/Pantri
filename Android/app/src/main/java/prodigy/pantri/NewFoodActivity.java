@@ -13,7 +13,7 @@ import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
 
-public class NewFoodActivity extends AppCompatActivity implements Runnable {
+public class NewFoodActivity extends AppCompatActivity {
 
     int quantity = 1;
     private ServerCommsTask mTask;
@@ -45,15 +45,8 @@ public class NewFoodActivity extends AppCompatActivity implements Runnable {
     }
 
     public void submit(View v) {
-        mTask = new ServerCommsTask(TaskType.ADD_INGREDIENT, (PantriApplication) getApplication(), ((TextView) findViewById(R.id.item_name)).getText().toString());
+        mTask = new ServerCommsTask<>(TaskType.ADD_INGREDIENT, null, (PantriApplication) getApplication(), ((TextView) findViewById(R.id.item_name)).getText().toString());
         mTask.execute();
-
-        mHandler = new Handler();
-        mHandler.post(this);
-    }
-
-    @Override
-    public void run() {
         finish();
     }
 }

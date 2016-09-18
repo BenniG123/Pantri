@@ -46,7 +46,7 @@ public class MainActivity extends PantriBaseActivity {
         super.onCreate(savedInstanceState);
         app.replaceLayout(this, R.layout.content_main);
 
-        mTask = new ServerCommsTask(TaskType.LIST_RECIPES, (PantriApplication) getApplication(), null, new Runnable() {
+        /*mTask = new ServerCommsTask(TaskType.LIST_RECIPES, (PantriApplication) getApplication(), null, new Runnable() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -57,7 +57,7 @@ public class MainActivity extends PantriBaseActivity {
                 });
             }
         });
-        mTask.execute();
+        mTask.execute();*/
 
         mRecipeScroller = (LinearLayout) findViewById(R.id.recipe_card_view);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -66,7 +66,7 @@ public class MainActivity extends PantriBaseActivity {
     }
 
     private void updateRecipes() {
-        if (mTask.recipes.isEmpty()) {
+        /*if (mTask.recipes.isEmpty()) {
             TextView text = (TextView) mRecipeScroller.getChildAt(0).findViewById(R.id.info_text);
             text.setText("No recipes found");
             return;
@@ -85,6 +85,6 @@ public class MainActivity extends PantriBaseActivity {
                     .fit()
                     .into(image);
             mRecipeScroller.addView(card);
-        }
+        }*/
     }
 }

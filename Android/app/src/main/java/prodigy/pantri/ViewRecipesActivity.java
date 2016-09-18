@@ -33,7 +33,7 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
     @Override
     protected void onResume() {
         super.onResume();
-        mTask = new ServerCommsTask(TaskType.LIST_RECIPES, (PantriApplication) getApplication());
+        mTask = new ServerCommsTask<>(TaskType.LIST_RECIPES, this, (PantriApplication) getApplication());
         mTask.execute();
     }
 

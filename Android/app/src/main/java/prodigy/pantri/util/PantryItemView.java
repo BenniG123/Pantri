@@ -68,8 +68,6 @@ public class PantryItemView extends LinearLayout implements Runnable {
 
     @Override
     public void run() {
-        while (!mTask.opDone);
-
         // Refresh the page
         mViewPantryActivity.refresh();
     }

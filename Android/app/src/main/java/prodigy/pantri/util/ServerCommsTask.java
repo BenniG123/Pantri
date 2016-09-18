@@ -31,7 +31,7 @@ import retrofit2.Retrofit;
 /**
  * Created by Quinn on 9/17/2016.
  */
-public class ServerCommsTask<T> extends AsyncTask<Void, Void, Object> {
+public class ServerCommsTask<T> extends AsyncTask<Object, Void, Object> {
     private PantriApplication mApp;
     private TaskType mTask;
     private String mParam;
@@ -40,15 +40,11 @@ public class ServerCommsTask<T> extends AsyncTask<Void, Void, Object> {
     private T mCallbackArg;
     public boolean opDone;
 
-    public ServerCommsTask(TaskType task, PantriApplication app) {
-        this(task, app, null);
+    public ServerCommsTask(TaskType task, PantriCallback<T> callback, PantriApplication app) {
+        this(task, callback, app, null);
     }
 
-    public ServerCommsTask(TaskType task, PantriApplication app, String param) {
-        this(task, app, param, null);
-    }
-
-    public ServerCommsTask(TaskType task, PantriApplication app, String param, PantriCallback<T> callback) {
+    public ServerCommsTask(TaskType task, PantriCallback<T> callback, PantriApplication app, String param) {
         mApp = app;
         mTask = task;
         mParam = param;
@@ -66,7 +62,7 @@ public class ServerCommsTask<T> extends AsyncTask<Void, Void, Object> {
     }
 
     @Override
-    protected Boolean doInBackground(Void... voids) {
+    protected Boolean doInBackground(Object... voids) {
         switch (mTask) {
             case LOGIN:
                 login(mApp, mParam);

@@ -86,7 +86,7 @@ public class PantriBaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             ret = new Intent(context, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            ServerCommsTask task = new ServerCommsTask(TaskType.LOGOUT, app);
+            ServerCommsTask task = new ServerCommsTask<>(TaskType.LOGOUT, null, app);
             task.execute();
             ret = new Intent(context, LoginActivity.class);
         }
