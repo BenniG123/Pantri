@@ -24,9 +24,7 @@
     </string>
 
     <string name="title_activity_settings">Settings</string>
-
-    <!-- Strings related to Settings -->
-
+    
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
