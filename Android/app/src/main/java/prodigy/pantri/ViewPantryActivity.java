@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import prodigy.pantri.util.Ingredient;
@@ -47,6 +50,12 @@ public class ViewPantryActivity extends PantriBaseActivity implements PantriCall
             @Override
             public void run() {
                 PantryItemAdapter pantryItemAdapter = new PantryItemAdapter(app, mIngredientList, mViewPantryActivity);
+                Collections.sort(mIngredientList, new Comparator<Ingredient>() {
+                    @Override
+                    public int compare(Ingredient o1, Ingredient o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
                 ListView listView = (ListView) findViewById(R.id.list_pantry);
                 listView.setAdapter(pantryItemAdapter);
             }
