@@ -12,8 +12,10 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import prodigy.pantri.util.Ingredient;
+import prodigy.pantri.util.LevenshteinComparator;
 
 public class FoodSearchActivity extends PantriBaseActivity implements SearchView.OnQueryTextListener, ListView.OnItemClickListener {
     private SearchView searchView;
@@ -77,6 +79,10 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
                 ret.add(masterIngredientList[i]);
             }
         }
+
+        // Sort by Levenshtein Distance
+        Collections.sort(ret, new LevenshteinComparator(toMatch));
+
         return ret;
     }
 }
