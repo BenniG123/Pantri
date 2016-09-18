@@ -36,6 +36,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
     private String mParam;
     public List<Ingredient> pantry = null;
     public List<Recipe> recipes = null;
+    public int ingredientID;
     public boolean opDone;
 
     public ServerCommsTask(TaskType task, PantriApplication app) {
@@ -44,6 +45,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         pantry = null;
         opDone = false;
         recipes = null;
+        ingredientID = -1;
     }
 
     public ServerCommsTask(TaskType task, PantriApplication app, String param) {
@@ -53,6 +55,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         pantry = null;
         opDone = false;
         recipes = null;
+        ingredientID = -1;
     }
 
     @Override
@@ -74,6 +77,7 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
             case GET_INGREDIENT_UPC:
                 break;
             case GET_INGREDIENT_NAME:
+                ingredientID = getIngredientByName(mApp, mParam);
                 break;
             case LIST_RECIPES:
                 recipes = getRecipes(mApp);
@@ -231,14 +235,14 @@ public class ServerCommsTask extends AsyncTask<Void, Void, Object> {
         return pantryList;
     }
 
-    private int getIngredientByName(PantriApplication app) {
+    private int getIngredientByName(PantriApplication app, String name) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(app.getString(R.string.rest_url))
                 .build();
 
         PantriService service = retrofit.create(PantriService.class);
 
-        Call<ResponseBody> authResponse = service.getIngredientName("Token " + app.getAuthToken(), mParam);
+        Call<ResponseBody> authResponse = service.getIngredientName("Token " + app.getAuthToken(), name);
         int ret = -1;
         try {
             Response<ResponseBody> response = authResponse.execute();
