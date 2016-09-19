@@ -3,6 +3,7 @@ package prodigy.pantri;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,7 +31,6 @@ import prodigy.pantri.util.ServerCommsTask;
 import prodigy.pantri.util.TaskType;
 
 public class ViewRecipesActivity extends PantriBaseActivity implements PantriCallback<List<Recipe>> {
-    private ListView listView;
     private List<Recipe> mRecipeList;
     private RecipeListAdapter listAdapter;
     private ServerCommsTask mTask;
@@ -55,7 +55,7 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
     @Override
     protected void onResume() {
         super.onResume();
-        if (mRecipeList == null || mRecipeList.size() == 0) {
+        if (mTask.getStatus() == AsyncTask.Status.PENDING) {
             refresh();
         }
     }

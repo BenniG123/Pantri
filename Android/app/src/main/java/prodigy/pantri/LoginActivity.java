@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
 
     // UI references.
     private AutoCompleteTextView mEmailView;
+    private ViewRecipesActivity mViewRecipesActiviy;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -74,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mViewRecipesActiviy = (ViewRecipesActivity) getParent();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -210,9 +212,10 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
                 showProgress(false);
 
                 if (((PantriApplication) getApplication()).getAuthToken() != null) {
-                    if (getParent() != null) {
-                        ((ViewRecipesActivity) getParent()).refresh();
+                    if (mViewRecipesActiviy != null) {
+                        mViewRecipesActiviy.refresh();
                     }
+
                     finish();
                 } else {
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
