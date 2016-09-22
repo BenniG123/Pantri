@@ -1,31 +1,16 @@
-package prodigy.pantri;
+package prodigy.pantri.activities;
 
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import prodigy.pantri.util.Ingredient;
-import prodigy.pantri.util.Recipe;
+import prodigy.pantri.R;
+import prodigy.pantri.models.Recipe;
 
 public class RecipeActivity extends AppCompatActivity {
 

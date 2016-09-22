@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="prodigy.pantri.NewFoodActivity">
+    tools:context=".activities.NewFoodActivity">
 
     <LinearLayout
         android:orientation="horizontal"

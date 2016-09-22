@@ -1,4 +1,4 @@
-package prodigy.pantri.util;
+package prodigy.pantri.models;
 
 import java.io.Serializable;
 

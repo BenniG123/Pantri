@@ -17,41 +17,41 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ViewRecipesActivity">
+            android:parentActivityName=".activities.ViewRecipesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="prodigy.pantri.ViewRecipesActivity" />
+                android:value=".activities.ViewRecipesActivity" />
         </activity>
         <activity
-            android:name=".RecipeActivity"
+            android:name=".activities.RecipeActivity"
             android:label="@string/title_activity_recipe"
-            android:parentActivityName=".ViewRecipesActivity"
+            android:parentActivityName=".activities.ViewRecipesActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ViewRecipesActivity" />
+                android:value=".activities.ViewRecipesActivity" />
         </activity>
         <activity
-            android:name=".ViewRecipesActivity"
+            android:name=".activities.ViewRecipesActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewFoodActivity" />
+        <activity android:name=".activities.NewFoodActivity" />
         <activity
-            android:name=".ViewPantryActivity"
+            android:name=".activities.ViewPantryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ShoppingListActivity"
+            android:name=".activities.ShoppingListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FoodSearchActivity"
+        <activity android:name=".activities.FoodSearchActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

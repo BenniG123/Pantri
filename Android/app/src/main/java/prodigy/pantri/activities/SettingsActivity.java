@@ -1,4 +1,4 @@
-package prodigy.pantri;
+package prodigy.pantri.activities;
 
 
 import android.annotation.TargetApi;
@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
 import java.util.List;
+
+import prodigy.pantri.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

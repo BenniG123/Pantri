@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="prodigy.pantri.RecipeActivity">
+    tools:context=".activities.RecipeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -45,6 +45,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_recipe" />
+    <include layout="@layout/activity_recipe_body" />
 
 </android.support.design.widget.CoordinatorLayout>

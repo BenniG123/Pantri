@@ -1,4 +1,4 @@
-package prodigy.pantri;
+package prodigy.pantri.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
