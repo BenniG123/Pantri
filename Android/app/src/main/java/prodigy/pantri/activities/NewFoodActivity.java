@@ -18,14 +18,12 @@ import prodigy.pantri.asynctasks.AddIngredientAsyncTask;
 import prodigy.pantri.models.Ingredient;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriCallback;
-import prodigy.pantri.asynctasks.ServerCommsTask;
-import prodigy.pantri.models.TaskType;
 
-public class NewFoodActivity extends AppCompatActivity implements PantriCallback<Ingredient> {
+public class NewFoodActivity extends AppCompatActivity implements PantriCallback<Boolean> {
 
-    int quantity = 1;
-    private ServerCommsTask mTask;
-    private Ingredient mIngred;
+    private AddIngredientAsyncTask mAddTask;
+    private Ingredient mIngredient;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -37,6 +35,8 @@ public class NewFoodActivity extends AppCompatActivity implements PantriCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_food);
 
+        mIngredient = new Ingredient();
+
         Intent i = getIntent();
         if (i.getStringExtra("name") != null) {
             TextView itemName = (TextView) findViewById(R.id.item_name);
@@ -44,14 +44,15 @@ public class NewFoodActivity extends AppCompatActivity implements PantriCallback
         }
 
         Button b = (Button) findViewById(R.id.btn_submit);
-        final PantriCallback<Ingredient> that = this;
+        final PantriCallback<Boolean> callback = this;
+
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String nameString = ((TextView) findViewById(R.id.item_name)).getText().toString();
-
-                mTask = new ServerCommsTask<>(TaskType.ADD_INGREDIENT, that, (PantriApplication) getApplication(), nameString, quantity);
-                mTask.execute();
+                mIngredient.name = nameString;
+                mAddTask = new AddIngredientAsyncTask((PantriApplication) getApplication(), callback, mIngredient.name, mIngredient.quantity);
+                mAddTask.execute();
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -60,29 +61,28 @@ public class NewFoodActivity extends AppCompatActivity implements PantriCallback
     }
 
     public void subQuantity(View v) {
-        if (quantity > 0) {
-            quantity--;
+        if (mIngredient.quantity > 0) {
+            mIngredient.quantity--;
         }
 
-        ((TextView) findViewById(R.id.quantity)).setText(String.valueOf(quantity));
+        ((TextView) findViewById(R.id.quantity)).setText(String.valueOf(mIngredient.quantity));
     }
 
     public void addQuantity(View v) {
-        quantity++;
-        ((TextView) findViewById(R.id.quantity)).setText(String.valueOf(quantity));
+        mIngredient.quantity++;
+        ((TextView) findViewById(R.id.quantity)).setText(String.valueOf(mIngredient.quantity));
     }
 
     @Override
-    public void run(Ingredient arg) {
-        mIngred = arg;
+    public void run(final Boolean isSuccessful) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mIngred == null) {
-                    Toast.makeText(getApplicationContext(), "Could not add that ingredient.", Toast.LENGTH_SHORT).show();
+                if (isSuccessful) {
+                    Toast.makeText(getApplicationContext(), "Successfully added " + mIngredient.name + "!", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Successfully added " + mIngred.name + "!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Could not add that ingredient.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
