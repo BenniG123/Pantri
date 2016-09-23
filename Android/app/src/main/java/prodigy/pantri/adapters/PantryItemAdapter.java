@@ -43,6 +43,6 @@ public class PantryItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return new PantryItemView(mContext, mIngredients.get(position), mViewPantryActivity);
+        return new PantryItemView(mContext, mIngredients, position, this, mViewPantryActivity);
     }
 }

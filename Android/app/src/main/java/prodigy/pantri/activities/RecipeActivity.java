@@ -23,9 +23,7 @@ public class RecipeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         r = (Recipe) getIntent().getSerializableExtra("recipe");
-
 
         // Create text view
         StringBuilder recipeInstructions = new StringBuilder(
@@ -46,6 +44,7 @@ public class RecipeActivity extends AppCompatActivity {
                         "</style></head>" +
                         "<body><h1>Ingredients</h1><ul>"
         );
+
         for (String s : r.ingredients) {
             recipeInstructions.append("<li>").append(s).append("</li>");
         }
@@ -53,9 +52,11 @@ public class RecipeActivity extends AppCompatActivity {
 
         recipeInstructions.append("<h1>Instructions</h1>");
         recipeInstructions.append("<ol>");
+
         for (String s : r.steps) {
             recipeInstructions.append("<li><p>").append(s).append("</p></li>");
         }
+
         recipeInstructions.append("</ol></body></html>");
 
         Log.e("Hey", recipeInstructions.toString());

@@ -16,21 +16,21 @@ import retrofit2.Retrofit;
  * Created by Ben on 9/23/2016.
  */
 
-public class AddIngredientAsyncTask extends AsyncTask<Object, Void, Boolean> {
+public class DeleteIngredientAsyncTask extends AsyncTask<Object, Void, Boolean> {
 
     private int mIngredientID;
     private int mQuantity;
     private PantriCallback<Boolean> mCallback;
     private PantriApplication mApp;
 
-    public AddIngredientAsyncTask(PantriApplication application, PantriCallback<Boolean> callback, int ingredientID, int quantity) {
+    public DeleteIngredientAsyncTask(PantriApplication application, PantriCallback<Boolean> callback, int ingredientID, int quantity) {
         mApp = application;
         mCallback = callback;
         mQuantity = quantity;
         mIngredientID = ingredientID;
     }
 
-    public AddIngredientAsyncTask(PantriApplication application, PantriCallback<Boolean> callback, int ingredientID) {
+    public DeleteIngredientAsyncTask(PantriApplication application, PantriCallback<Boolean> callback, int ingredientID) {
         mApp = application;
         mCallback = callback;
         mIngredientID = ingredientID;
@@ -40,25 +40,27 @@ public class AddIngredientAsyncTask extends AsyncTask<Object, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Object[] params) {
         boolean result = false;
+
         if (mQuantity > 0) {
-             result = addIngredient(mQuantity);
+            result = deleteIngredient(mQuantity);
         }
         else {
-            result = addIngredient();
+            result = deleteIngredient();
         }
 
         mCallback.run(result);
         return result;
     }
 
-    private boolean addIngredient(int quantity) {
+    private boolean deleteIngredient(int quantity) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mApp.getString(R.string.rest_url))
                 .build();
 
         PantriService service = retrofit.create(PantriService.class);
 
-        Call<ResponseBody> authResponse = service.incIngredient("Token " + mApp.getAuthToken(), mIngredientID, quantity);
+        Call<ResponseBody> authResponse = service.decIngredient("Token " + mApp.getAuthToken(), mIngredientID, quantity);
+
         try {
             authResponse.execute();
         } catch (IOException e) {
@@ -68,14 +70,15 @@ public class AddIngredientAsyncTask extends AsyncTask<Object, Void, Boolean> {
         return authResponse.isExecuted();
     }
 
-    private boolean addIngredient() {
+    private boolean deleteIngredient() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mApp.getString(R.string.rest_url))
                 .build();
 
         PantriService service = retrofit.create(PantriService.class);
 
-        Call<ResponseBody> authResponse = service.addIngredient("Token " + mApp.getAuthToken(), mIngredientID);
+        Call<ResponseBody> authResponse = service.deleteIngredient("Token " + mApp.getAuthToken(), mIngredientID);
+
         try {
             authResponse.execute();
         } catch (IOException e) {
