@@ -37,7 +37,7 @@ public class ViewPantryAsyncTask extends AsyncTask<Object, Void, Boolean> {
     protected Boolean doInBackground(Object[] params) {
         List<Ingredient> ingredientList = getPantry();
         mCallback.run(ingredientList);
-        return ingredientList == null;
+        return ingredientList != null;
     }
 
     private List<Ingredient> getPantry() {

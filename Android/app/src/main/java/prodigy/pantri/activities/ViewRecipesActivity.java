@@ -16,6 +16,7 @@ import java.util.List;
 
 import prodigy.pantri.R;
 import prodigy.pantri.adapters.RecipeAdapter;
+import prodigy.pantri.asynctasks.ViewRecipesAsyncTask;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.models.Recipe;
@@ -24,7 +25,7 @@ import prodigy.pantri.models.TaskType;
 
 public class ViewRecipesActivity extends PantriBaseActivity implements PantriCallback<List<Recipe>> {
     private List<Recipe> mRecipeList;
-    private ServerCommsTask mTask;
+    private ViewRecipesAsyncTask mTask;
     private GridView mGrid;
     private TextView mPlaceholder;
     private ViewRecipesActivity mViewRecipesActivity;
@@ -39,7 +40,7 @@ public class ViewRecipesActivity extends PantriBaseActivity implements PantriCal
     }
 
     public void refresh() {
-        mTask = new ServerCommsTask<>(TaskType.LIST_RECIPES, this, (PantriApplication) getApplication());
+        mTask = new ViewRecipesAsyncTask((PantriApplication) getApplication(), this);
         mGrid = (GridView) findViewById(R.id.recipe_grid);
         mPlaceholder = (TextView) findViewById(R.id.placeholder);
         mTask.execute();
