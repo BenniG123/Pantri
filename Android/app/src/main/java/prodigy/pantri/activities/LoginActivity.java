@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import prodigy.pantri.R;
+import prodigy.pantri.asynctasks.LoginAsyncTask;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.asynctasks.ServerCommsTask;
@@ -27,11 +28,11 @@ import prodigy.pantri.models.TaskType;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements PantriCallback<Void> {
+public class LoginActivity extends AppCompatActivity implements PantriCallback<Boolean> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private ServerCommsTask mAuthTask = null;
+    private LoginAsyncTask mLoginTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (mLoginTask != null) {
             return;
         }
 
@@ -121,8 +122,8 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new ServerCommsTask<>(TaskType.LOGIN, this, (PantriApplication) getApplication(), email);
-            mAuthTask.execute();
+            mLoginTask = new LoginAsyncTask((PantriApplication) getApplication(), email, this);
+            mLoginTask.execute();
         }
     }
 
@@ -173,14 +174,14 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<V
     }
 
     @Override
-    public void run(Void v) {
+    public void run(final Boolean b) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAuthTask = null;
+                mLoginTask = null;
                 showProgress(false);
 
-                if (((PantriApplication) getApplication()).getAuthToken() != null) {
+                if (b) {
                     if (mViewRecipesActiviy != null) {
                         mViewRecipesActiviy.refresh();
                     }
