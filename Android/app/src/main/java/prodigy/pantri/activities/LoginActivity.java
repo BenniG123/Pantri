@@ -137,6 +137,28 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<B
         return password.length() > 4;
     }
 
+    @Override
+    public void run(final Boolean b) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mLoginTask = null;
+                showProgress(false);
+
+                if (b) {
+                    if (mViewRecipesActiviy != null) {
+                        mViewRecipesActiviy.refresh();
+                    }
+
+                    finish();
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
+            }
+        });
+    }
+
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -171,28 +193,6 @@ public class LoginActivity extends AppCompatActivity implements PantriCallback<B
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
-
-    @Override
-    public void run(final Boolean b) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mLoginTask = null;
-                showProgress(false);
-
-                if (b) {
-                    if (mViewRecipesActiviy != null) {
-                        mViewRecipesActiviy.refresh();
-                    }
-
-                    finish();
-                } else {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
-                }
-            }
-        });
     }
 }
 
