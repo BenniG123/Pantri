@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import prodigy.pantri.R;
 import prodigy.pantri.activities.ViewPantryActivity;
+import prodigy.pantri.asynctasks.AddIngredientAsyncTask;
 import prodigy.pantri.models.Ingredient;
 import prodigy.pantri.models.TaskType;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.asynctasks.ServerCommsTask;
+import prodigy.pantri.util.PantriCallback;
 
 /**
  * Created by Ben on 9/17/2016.
@@ -25,6 +27,7 @@ public class PantryItemView extends LinearLayout implements Runnable {
     private Context mContext;
     private Handler mHandler;
     private PantryItemView mRunnable;
+    private AddIngredientAsyncTask mAddTask;
     private ServerCommsTask mTask;
     private ViewPantryActivity mViewPantryActivity;
 
@@ -54,7 +57,6 @@ public class PantryItemView extends LinearLayout implements Runnable {
         decrementButton.setOnClickListener(new OnClickListener() {
                @Override
                public void onClick(View v) {
-                   // Get list of ingredients
                    mTask = new ServerCommsTask<>(TaskType.DEC_INGREDIENT, null, (PantriApplication) mContext, mIngredient.id, 1);
                    mTask.execute();
 
@@ -68,12 +70,23 @@ public class PantryItemView extends LinearLayout implements Runnable {
         incrementButton.setOnClickListener(new OnClickListener() {
                                                @Override
                                                public void onClick(View v) {
-               // Get list of ingredients
-               mTask = new ServerCommsTask<>(TaskType.INC_INGREDIENT, null, (PantriApplication) mContext, mIngredient.id, 1);
-               mTask.execute();
-
-               mHandler = new Handler();
-               mHandler.post(mRunnable);
+               mAddTask = new AddIngredientAsyncTask((PantriApplication) mContext, new PantriCallback<Boolean>() {
+                   @Override
+                   public void run(Boolean isAdded) {
+                       if (isAdded) {
+                           mIngredient.quantity++;
+                           // Increment Client Quantity
+                           mViewPantryActivity.runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   TextView quantityView = (TextView) findViewById(R.id.txt_quantity);
+                                   quantityView.setText(Integer.toString(mIngredient.quantity));
+                               }
+                           });
+                       }
+                   }
+               }, mIngredient.id);
+               mAddTask.execute();
            }
        }
         );
@@ -85,5 +98,4 @@ public class PantryItemView extends LinearLayout implements Runnable {
         // Refresh the page
         mViewPantryActivity.refresh();
     }
-
 }

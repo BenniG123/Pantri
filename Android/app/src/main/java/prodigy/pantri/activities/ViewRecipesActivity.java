@@ -1,16 +1,10 @@
 package prodigy.pantri.activities;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -20,8 +14,6 @@ import prodigy.pantri.asynctasks.ViewRecipesAsyncTask;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.models.Recipe;
-import prodigy.pantri.asynctasks.ServerCommsTask;
-import prodigy.pantri.models.TaskType;
 
 public class ViewRecipesActivity extends PantriBaseActivity implements PantriCallback<List<Recipe>> {
     private List<Recipe> mRecipeList;
