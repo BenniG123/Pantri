@@ -78,7 +78,7 @@ public class RecipeActivity extends AppCompatActivity {
                 .into(recipeImage);
 
         setTitle(r.name);
-        
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

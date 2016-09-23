@@ -2,7 +2,6 @@ package prodigy.pantri.views;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,9 +16,7 @@ import prodigy.pantri.adapters.PantryItemAdapter;
 import prodigy.pantri.asynctasks.AddIngredientAsyncTask;
 import prodigy.pantri.asynctasks.DeleteIngredientAsyncTask;
 import prodigy.pantri.models.Ingredient;
-import prodigy.pantri.models.TaskType;
 import prodigy.pantri.util.PantriApplication;
-import prodigy.pantri.asynctasks.ServerCommsTask;
 import prodigy.pantri.util.PantriCallback;
 
 /**

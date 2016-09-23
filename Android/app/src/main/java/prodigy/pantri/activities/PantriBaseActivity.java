@@ -17,8 +17,6 @@ import prodigy.pantri.asynctasks.LogoutAsyncTask;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.util.PantriDrawerToggle;
-import prodigy.pantri.asynctasks.ServerCommsTask;
-import prodigy.pantri.models.TaskType;
 
 public class PantriBaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

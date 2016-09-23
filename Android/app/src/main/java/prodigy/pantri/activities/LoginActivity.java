@@ -22,8 +22,6 @@ import prodigy.pantri.R;
 import prodigy.pantri.asynctasks.LoginAsyncTask;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriCallback;
-import prodigy.pantri.asynctasks.ServerCommsTask;
-import prodigy.pantri.models.TaskType;
 
 /**
  * A login screen that offers login via email/password.

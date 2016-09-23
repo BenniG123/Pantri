@@ -13,18 +13,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import prodigy.pantri.R;
+import prodigy.pantri.asynctasks.AddIngredientAsyncTask;
+import prodigy.pantri.asynctasks.LookupIngredientUPCAsyncTask;
 import prodigy.pantri.models.Ingredient;
 import prodigy.pantri.util.LevenshteinComparator;
 import prodigy.pantri.util.PantriCallback;
-import prodigy.pantri.asynctasks.ServerCommsTask;
-import prodigy.pantri.models.TaskType;
 
 public class FoodSearchActivity extends PantriBaseActivity implements SearchView.OnQueryTextListener, ListView.OnItemClickListener, PantriCallback<Ingredient> {
-    private SearchView searchView;
-    private ListView listView;
-    private ArrayList<String> ingredientNames;
-    private ArrayAdapter<String> adapter;
-    private String[] masterIngredientList;
+    private SearchView mSearchView;
+    private ArrayList<String> mIngredientNames;
+    private ArrayAdapter<String> mAdapter;
+    private String[] mIngredientList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +31,17 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
         app.replaceLayout(this, R.layout.activity_food_search);
         setTitle("Add Food");
 
-        masterIngredientList = getResources().getStringArray(R.array.master_ingredients);
-        searchView = (SearchView) findViewById(R.id.search_view);
-        searchView.setIconifiedByDefault(false);
-        searchView.requestFocus();
-        searchView.setOnQueryTextListener(this);
+        mIngredientList = getResources().getStringArray(R.array.master_ingredients);
+        mSearchView = (SearchView) findViewById(R.id.search_view);
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.requestFocus();
+        mSearchView.setOnQueryTextListener(this);
 
-        listView = (ListView) findViewById(R.id.list_view);
-        ingredientNames = new ArrayList<>();
-        ingredientNames.addAll(getMasterIngredientMatches(""));
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientNames);
-        listView.setAdapter(adapter);
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        mIngredientNames = new ArrayList<>();
+        mIngredientNames.addAll(getMasterIngredientMatches(""));
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mIngredientNames);
+        listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(this);
     }
 
@@ -55,15 +54,15 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
     public boolean onQueryTextChange(String s) {
         if (s.length() > 1 && s.charAt(s.length() - 1) == ' ' && s.substring(0, s.length() - 1).matches("^[0-9]+$")) {
             // If match found for UPC, add it and let the user know
-            ServerCommsTask task = new ServerCommsTask<>(TaskType.GET_INGREDIENT_UPC, this, app, s.substring(0, s.length()-1));
+            LookupIngredientUPCAsyncTask task = new LookupIngredientUPCAsyncTask(app, s.substring(0, s.length()-1), this);
             task.execute();
-            searchView.setQuery("", false);
+            mSearchView.setQuery("", false);
         }
         else if (!s.substring(0, s.length()).matches("^[0-9]+$")) {
             // Update the ingredients suggested
-            ingredientNames.clear();
-            ingredientNames.addAll(getMasterIngredientMatches(s));
-            adapter.notifyDataSetChanged();
+            mIngredientNames.clear();
+            mIngredientNames.addAll(getMasterIngredientMatches(s));
+            mAdapter.notifyDataSetChanged();
         }
         return true;
     }
@@ -71,16 +70,16 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(this, NewFoodActivity.class);
-        intent.putExtra("name", ingredientNames.get(i));
+        intent.putExtra("name", mIngredientNames.get(i));
         startActivity(intent);
-        searchView.setQuery("", false);
+        mSearchView.setQuery("", false);
     }
 
     private ArrayList<String> getMasterIngredientMatches(String toMatch) {
         ArrayList<String> ret = new ArrayList<>();
-        for (int i = 0; i < masterIngredientList.length; i++) {
-            if (masterIngredientList[i].toLowerCase().contains(toMatch.toLowerCase())) {
-                ret.add(masterIngredientList[i]);
+        for (int i = 0; i < mIngredientList.length; i++) {
+            if (mIngredientList[i].toLowerCase().contains(toMatch.toLowerCase())) {
+                ret.add(mIngredientList[i]);
             }
         }
 
@@ -93,15 +92,20 @@ public class FoodSearchActivity extends PantriBaseActivity implements SearchView
     @Override
     public void run(Ingredient arg) {
         final Ingredient tmp = arg;
+
         if (arg != null) { // Match
-            ServerCommsTask task = new ServerCommsTask<>(TaskType.INC_INGREDIENT, null, app, arg.id, 1);
-            task.execute();
-            runOnUiThread(new Runnable() {
+            AddIngredientAsyncTask task = new AddIngredientAsyncTask(app, new PantriCallback<Boolean>() {
                 @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "Successfully added " + tmp.name + "!", Toast.LENGTH_SHORT).show();
+                public void run(Boolean arg) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Successfully added " + tmp.name + "!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-            });
+            }, arg.id);
+            task.execute();
         }
         else {
             Intent i = new Intent(this, NewFoodActivity.class);

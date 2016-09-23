@@ -19,8 +19,6 @@ import prodigy.pantri.asynctasks.ViewPantryAsyncTask;
 import prodigy.pantri.models.Ingredient;
 import prodigy.pantri.util.PantriApplication;
 import prodigy.pantri.util.PantriCallback;
-import prodigy.pantri.asynctasks.ServerCommsTask;
-import prodigy.pantri.models.TaskType;
 
 public class ViewPantryActivity extends PantriBaseActivity implements PantriCallback<List<Ingredient>> {
 
