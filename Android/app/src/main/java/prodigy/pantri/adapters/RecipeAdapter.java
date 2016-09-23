@@ -79,6 +79,7 @@ public class RecipeAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, RecipeActivity.class);
                 intent.putExtra("recipe", mRecipes.get(position));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
         });

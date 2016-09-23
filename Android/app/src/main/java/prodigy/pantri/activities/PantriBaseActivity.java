@@ -13,7 +13,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import prodigy.pantri.R;
+import prodigy.pantri.asynctasks.LogoutAsyncTask;
 import prodigy.pantri.util.PantriApplication;
+import prodigy.pantri.util.PantriCallback;
 import prodigy.pantri.util.PantriDrawerToggle;
 import prodigy.pantri.asynctasks.ServerCommsTask;
 import prodigy.pantri.models.TaskType;
@@ -85,7 +87,12 @@ public class PantriBaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             ret = new Intent(context, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            ServerCommsTask task = new ServerCommsTask<>(TaskType.LOGOUT, null, app);
+            LogoutAsyncTask task = new LogoutAsyncTask(app, new PantriCallback<Boolean>() {
+                @Override
+                public void run(Boolean b) {
+                    // TODO - Make this do something
+                }
+            });
             task.execute();
             ret = new Intent(context, LoginActivity.class);
         }

@@ -21,7 +21,6 @@ import retrofit2.Retrofit;
 /**
  * Created by Ben on 9/23/2016.
  */
-
 public class LoginAsyncTask extends AsyncTask<Object, Void, Object> {
 
     private PantriApplication mApp;
