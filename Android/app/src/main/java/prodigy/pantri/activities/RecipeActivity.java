@@ -1,6 +1,7 @@
 package prodigy.pantri.activities;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -75,7 +76,12 @@ public class RecipeActivity extends AppCompatActivity {
                 .into(recipeImage);
 
         setTitle(r.name);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // TODO - The Back button refreshes the recipes currently.  Make it simply finish() this activity
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
     }
 }

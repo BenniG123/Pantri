@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
  * Created by Ben on 9/23/2016.
  */
 
-public class LogoutAsyncTask extends AsyncTask {
+public class LogoutAsyncTask extends AsyncTask<Object, Void, Boolean> {
 
     private PantriApplication mApp;
     private PantriCallback<Boolean> mCallback;
