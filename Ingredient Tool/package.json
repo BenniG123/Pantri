@@ -1,0 +1,15 @@
+{
+  "name": "pantri-ingredient-tool",
+  "version": "0.0.1",
+  "description": "Pantri Ingredient Database Manipulation Tool",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nick Gerleman",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "electron": "^1.4.1",
+    "handlebars": "^4.0.5"
+  }
+}
