@@ -1,0 +1,15 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "removeComments": true,
+        "sourceMap": true,
+        "jsx": "react",
+        "outDir": "./build/"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
