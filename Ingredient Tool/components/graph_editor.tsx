@@ -1,5 +1,7 @@
 import * as React from 'react'
 import {remote} from 'electron'
+import IngredientList from './ingredient_list'
+import IngredientView from './ingredient_view'
 import {IngredientGraph} from '../ingredient/graph'
 
 /**
@@ -12,7 +14,10 @@ interface EditorProps {
 
 export default React.createClass<EditorProps, any>({
     render: () =>
-    <h1>Testing</h1>,
+    <div>
+        <IngredientList/>
+        <IngredientView/>
+    </div>,
 
     componentDidMount: () => {
         let window = remote.getCurrentWindow();

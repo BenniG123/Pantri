@@ -22,7 +22,7 @@ export default React.createClass({
     componentDidMount: () => {
         let window = remote.getCurrentWindow();
         window.setSize(400, 150);
-        window.setTitle('Open or Create an Ingredients');
+        window.setTitle('Open or Create an Ingredient List');
         window.setMaximizable(false);
         window.setResizable(false);
         window.webContents.openDevTools();

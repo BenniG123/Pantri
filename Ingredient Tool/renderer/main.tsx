@@ -5,6 +5,7 @@ import StartDialog from '../components/start_dialog'
 
 window.onload = () => {
     ReactDom.render(<StartDialog/>, document.getElementById('content'));
+    remote.getCurrentWindow().setMenu(null);
     remote.getCurrentWindow().show();
 };
 
